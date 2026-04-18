@@ -502,14 +502,45 @@ section {
   border-radius: 50%;
   background: var(--accent);
   margin-left: 5px;
-  margin-top: 0.5rem;
+  margin-top: 0.9rem;
   box-shadow: 0 0 0 4px var(--sky-a), 0 0 18px 2px color-mix(in srgb, var(--accent) 50%, transparent);
   transition: box-shadow 800ms, background 800ms;
   position: relative;
   z-index: 1;
+  animation: dotPulse 3.2s ease-in-out infinite;
+}
+.schedule-item:nth-child(2) .schedule-dot { animation-delay: 0.4s; }
+.schedule-item:nth-child(3) .schedule-dot { animation-delay: 0.8s; }
+.schedule-item:nth-child(4) .schedule-dot { animation-delay: 1.2s; }
+.schedule-item:nth-child(5) .schedule-dot { animation-delay: 1.6s; }
+@keyframes dotPulse {
+  0%, 100% { box-shadow: 0 0 0 4px var(--sky-a), 0 0 12px 2px color-mix(in srgb, var(--accent) 35%, transparent); }
+  50%      { box-shadow: 0 0 0 4px var(--sky-a), 0 0 24px 6px color-mix(in srgb, var(--accent) 70%, transparent); }
 }
 
-.schedule-body h3 {
+/* Two-column body: illustration vignette + text */
+.schedule-body {
+  display: grid;
+  grid-template-columns: minmax(110px, 140px) 1fr;
+  column-gap: 1.5rem;
+  align-items: center;
+}
+.schedule-thumb {
+  width: 100%;
+  height: auto;
+  display: block;
+  mix-blend-mode: multiply;
+  filter: drop-shadow(0 10px 24px color-mix(in srgb, var(--accent) 18%, transparent));
+  transition: transform 700ms var(--ease), filter 800ms;
+  transform-origin: center bottom;
+}
+html[data-theme="night"] .schedule-thumb {
+  mix-blend-mode: screen;
+  filter: drop-shadow(0 10px 24px color-mix(in srgb, var(--gold) 30%, transparent)) brightness(1.1) contrast(0.95);
+}
+.schedule-item:hover .schedule-thumb { transform: rotate(-1.2deg) translateY(-3px) scale(1.03); }
+
+.schedule-body-text h3 {
   font-family: var(--font-display);
   font-weight: 400;
   font-style: italic;
@@ -517,11 +548,29 @@ section {
   margin: 0 0 0.35rem;
   color: var(--ink);
 }
-.schedule-body p {
+.schedule-body-text p {
   margin: 0;
   color: var(--ink-soft);
   font-size: 0.98rem;
   max-width: 52ch;
+}
+
+/* Staggered reveal — each item pops in 180ms after its predecessor */
+.schedule-item.reveal { transition-delay: calc(var(--i, 0) * 180ms); }
+.schedule-item.reveal .schedule-thumb {
+  opacity: 0;
+  transform: translateY(18px) rotate(-2deg);
+  transition: opacity 900ms var(--ease), transform 900ms var(--ease);
+  transition-delay: calc(var(--i, 0) * 180ms + 200ms);
+}
+.schedule-item.reveal.shown .schedule-thumb { opacity: 1; transform: translateY(0) rotate(0); }
+
+@media (max-width: 640px) {
+  .schedule-body {
+    grid-template-columns: 1fr;
+    row-gap: 0.9rem;
+  }
+  .schedule-thumb { max-width: 180px; margin: 0 auto; }
 }
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -888,11 +937,11 @@ const CONFIG = {
   scheduleEyebrow: 'From Dusk to Dawn',
   scheduleTitle:   'The Evening',
   schedule: [
-    { time: '17:00', title: 'The Welcome',          desc: 'Mint tea & Moroccan delights: gathering in the garden as the sun sets over the Atlas Mountains.' },
-    { time: '18:00', title: 'The Ammaria Entrance', desc: 'The first reveal — our grand entrance to the sounds of Dakka Marrakchia.' },
-    { time: '20:00', title: 'The Mida Entrance',    desc: 'The Henna Reveal: celebrating tradition as the bride is carried on the Mida.' },
-    { time: '22:00', title: 'The Wedding Feast',    desc: 'A gourmet Moroccan dinner served under the stars.' },
-    { time: '00:00', title: 'The Grande Finale',    desc: 'The final reveal and cake cutting.' },
+    { time: '17:00', title: 'The Welcome',          desc: 'Mint tea & Moroccan delights: gathering in the garden as the sun sets over the Atlas Mountains.', thumb: 'assets/schedule-welcome.png' },
+    { time: '18:00', title: 'The Ammaria Entrance', desc: 'The first reveal — our grand entrance to the sounds of Dakka Marrakchia.',                        thumb: 'assets/schedule-ammaria.png' },
+    { time: '20:00', title: 'The Mida Entrance',    desc: 'The Henna Reveal: celebrating tradition as the bride is carried on the Mida.',                     thumb: 'assets/schedule-mida.png' },
+    { time: '22:00', title: 'The Wedding Feast',    desc: 'A gourmet Moroccan dinner served under the stars.',                                                thumb: 'assets/schedule-feast.png' },
+    { time: '00:00', title: 'The Grande Finale',    desc: 'The final reveal and cake cutting.',                                                               thumb: 'assets/schedule-finale.png' },
   ],
 
   /* ── Details ────────────────────────────────────────────────── */
@@ -933,13 +982,16 @@ document.title = `${CONFIG.partnerA} & ${CONFIG.partnerB} · ${CONFIG.displayDat
    ══════════════════════════════════════════════════════════════════════ */
 (function renderSchedule() {
   const list = document.getElementById('scheduleList');
-  list.innerHTML = CONFIG.schedule.map(({ time, title, desc }) => `
-    <div class="schedule-item reveal">
+  list.innerHTML = CONFIG.schedule.map(({ time, title, desc, thumb }, i) => `
+    <div class="schedule-item reveal" style="--i:${i}">
       <div class="schedule-time">${time}</div>
       <div class="schedule-dot" aria-hidden="true"></div>
       <div class="schedule-body">
-        <h3>${title}</h3>
-        <p>${desc}</p>
+        ${thumb ? `<img class="schedule-thumb" src="${thumb}" alt="" loading="lazy" />` : ''}
+        <div class="schedule-body-text">
+          <h3>${title}</h3>
+          <p>${desc}</p>
+        </div>
       </div>
     </div>
   `).join('');
