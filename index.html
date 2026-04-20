@@ -745,17 +745,50 @@ footer small {
    RESPONSIVE
    ══════════════════════════════════════════════════════════════════════ */
 @media (max-width: 640px) {
-  .countdown { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.6rem; }
-  .countdown-unit { padding: 1rem 0.2rem; }
-  .countdown-label { font-size: 0.58rem; letter-spacing: 0.24em; }
+  :root { --gutter: 1.25rem; }
 
-  .schedule-timeline::before { left: calc(60px + 1rem); }
-  .schedule-item { grid-template-columns: 60px 1rem 1fr; column-gap: 1rem; }
-  .schedule-time { font-size: 1rem; }
-  .schedule-body h3 { font-size: 1.25rem; }
+  /* Hero — tighten letter-spacing and vertical rhythm so text fits cleanly */
+  .hero { padding: clamp(2rem, 6vh, 3.5rem) var(--gutter) 3rem; }
+  .eyebrow { letter-spacing: 0.3em; margin-bottom: 1.8rem; font-size: 0.7rem; }
+  .hero-date { letter-spacing: 0.36em; margin-top: 1.8rem; font-size: 1rem; }
+  .hero-loc { letter-spacing: 0.28em; margin-bottom: 1.5rem; font-size: 0.7rem; }
+  .scroll-cue { bottom: 1.25rem; font-size: 0.6rem; letter-spacing: 0.38em; }
+  .scroll-cue::before { height: 28px; margin-bottom: 0.6rem; }
 
-  .theme-toggle { width: 48px; height: 48px; }
-  .theme-toggle svg { width: 22px; height: 22px; }
+  /* Section rhythm */
+  section { padding: 3.5rem var(--gutter); }
+  .section-title { font-size: clamp(1.9rem, 7vw, 2.4rem); }
+  .section-eyebrow { font-size: 0.66rem; letter-spacing: 0.4em; }
+  .divider { margin: 1.8rem auto 2.5rem; max-width: 220px; gap: 1rem; }
+
+  /* Countdown */
+  .countdown { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.5rem; }
+  .countdown-unit { padding: 0.9rem 0.2rem; }
+  .countdown-num { font-size: 1.8rem; }
+  .countdown-label { font-size: 0.55rem; letter-spacing: 0.22em; margin-top: 0.5rem; }
+
+  /* Schedule */
+  .schedule-timeline::before { left: calc(56px + 0.9rem); }
+  .schedule-item { grid-template-columns: 56px 0.9rem 1fr; column-gap: 0.9rem; padding: 1.2rem 0; }
+  .schedule-time { font-size: 0.95rem; }
+  .schedule-body h3 { font-size: 1.2rem; }
+  .schedule-body-text p { font-size: 0.92rem; }
+
+  /* Details — stack cards, ease padding */
+  .details-grid { grid-template-columns: 1fr; gap: 1.2rem; }
+  .detail-card { padding: 2rem 1.4rem; }
+  .detail-card h3 { font-size: 1.4rem; margin-bottom: 1rem; }
+  .detail-card .venue-name { font-size: 1.25rem; }
+  .detail-card .map-link { padding: 0.4rem 0.6rem; margin-top: 1rem; } /* larger tap area */
+
+  /* Theme toggle */
+  .theme-toggle { width: 44px; height: 44px; top: 0.9rem; right: 0.9rem; }
+  .theme-toggle svg { width: 20px; height: 20px; }
+
+  /* Footer */
+  footer { padding: 2.5rem var(--gutter) 2rem; }
+  .footer-seal { width: 72px; margin-bottom: 0.8rem; }
+  footer .sig { font-size: 1.7rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
