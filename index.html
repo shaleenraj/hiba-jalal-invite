@@ -165,12 +165,15 @@ html[data-theme="night"] .theme-toggle .moon { display: block; }
   position: absolute;
   inset: 0;
   z-index: 0;
-  background-image: url('assets/hero.jpg');
+  background-image: url('assets/morning.png');
   background-size: cover;
   background-position: center 30%;
   filter: saturate(1.05) contrast(1.02);
   transform: scale(1.06);
-  transition: filter 1200ms var(--ease-in-out), opacity 1200ms var(--ease-in-out);
+  transition: background-image 1200ms var(--ease-in-out), filter 1200ms var(--ease-in-out), opacity 1200ms var(--ease-in-out);
+}
+html[data-theme="night"] .hero-bg {
+  background-image: url('assets/night.png');
 }
 .hero-bg::after {
   content: '';
