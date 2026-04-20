@@ -747,12 +747,13 @@ footer small {
 @media (max-width: 640px) {
   :root { --gutter: 1.25rem; }
 
-  /* Hero — show more of the backdrop photo on narrow viewports
-     (landscape images get heavily cropped under `cover` on a portrait phone) */
+  /* Hero — nudge the backdrop a touch looser than `cover` on phones
+     (landscape images get heavily cropped under `cover` on a portrait phone,
+     but `contain` leaves the photo too small — this sits between). */
   .hero-bg-layer {
-    background-size: contain;
+    background-size: auto 88%;
     background-repeat: no-repeat;
-    background-position: center 18%;
+    background-position: center 22%;
     transform: none;
   }
   /* Tighten letter-spacing and vertical rhythm so text fits cleanly */
