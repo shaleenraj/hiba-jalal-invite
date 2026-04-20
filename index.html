@@ -160,33 +160,46 @@ html[data-theme="night"] .theme-toggle .moon { display: block; }
   position: relative;
   overflow: hidden;
 }
-/* Cinematic backdrop image (mosque at golden hour). Sits under stars + sun/moon. */
+/* Cinematic backdrop image (mosque at golden hour). Cross-fades between morning & night layers. */
 .hero-bg {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background-image: url('assets/morning.png');
+  overflow: hidden;
+}
+.hero-bg-layer {
+  position: absolute;
+  inset: 0;
   background-size: cover;
   background-position: center 30%;
-  filter: saturate(1.05) contrast(1.02);
   transform: scale(1.06);
-  transition: background-image 1200ms var(--ease-in-out), filter 1200ms var(--ease-in-out), opacity 1200ms var(--ease-in-out);
+  transition: opacity 1200ms var(--ease-in-out), filter 1200ms var(--ease-in-out);
 }
-html[data-theme="night"] .hero-bg {
+.hero-bg-layer.morning {
+  background-image: url('assets/morning.png');
+  filter: saturate(1.08) contrast(1.04);
+  opacity: 1;
+}
+.hero-bg-layer.night {
   background-image: url('assets/night.png');
+  filter: saturate(0.85) contrast(1.05) brightness(0.8);
+  opacity: 0;
 }
+html[data-theme="night"] .hero-bg-layer.morning { opacity: 0; }
+html[data-theme="night"] .hero-bg-layer.night   { opacity: 1; }
+
 .hero-bg::after {
   content: '';
   position: absolute;
   inset: 0;
   background:
     linear-gradient(180deg,
-      color-mix(in srgb, var(--sky-a) 55%, transparent) 0%,
-      color-mix(in srgb, var(--sky-b) 65%, transparent) 55%,
-      color-mix(in srgb, var(--sky-b) 90%, transparent) 100%);
+      color-mix(in srgb, var(--sky-a) 18%, transparent) 0%,
+      color-mix(in srgb, var(--sky-b) 28%, transparent) 60%,
+      color-mix(in srgb, var(--sky-b) 55%, transparent) 100%);
   transition: background 1200ms var(--ease-in-out);
+  pointer-events: none;
 }
-html[data-theme="night"] .hero-bg { filter: saturate(0.6) contrast(1.1) brightness(0.45) hue-rotate(-15deg); }
 
 .celestial-body {
   position: absolute;
@@ -199,25 +212,15 @@ html[data-theme="night"] .hero-bg { filter: saturate(0.6) contrast(1.1) brightne
   background: var(--celestial);
   box-shadow: var(--celestial-glow);
   z-index: 1;
-  animation: float 9s var(--ease-in-out) infinite;
-  transition: background 1200ms var(--ease-in-out), box-shadow 1200ms var(--ease-in-out);
+  opacity: 0;
+  pointer-events: none;
+  /* Crescent mask — carves a clean bite out of the disc so it reads as a moon
+     against whatever sky (image, gradient) sits behind it. */
+  -webkit-mask: radial-gradient(circle at 68% 42%, transparent 48%, #000 49%);
+          mask: radial-gradient(circle at 68% 42%, transparent 48%, #000 49%);
+  transition: opacity 1200ms var(--ease-in-out), background 1200ms var(--ease-in-out), box-shadow 1200ms var(--ease-in-out);
 }
-
-html[data-theme="night"] .celestial-body::before {
-  /* carve a crescent by overlaying a slightly-offset sky disc */
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
-  background: var(--sky-a);
-  transform: translate(-22%, -18%);
-  transition: transform 1200ms var(--ease-in-out);
-}
-
-@keyframes float {
-  0%, 100% { transform: translate(-50%, 0); }
-  50%      { transform: translate(-50%, -14px); }
-}
+html[data-theme="night"] .celestial-body { opacity: 1; }
 
 .hero-content { position: relative; z-index: 3; max-width: 820px; }
 
@@ -325,7 +328,11 @@ html[data-theme="night"] .celestial-body::before {
   text-transform: uppercase;
   color: var(--ink-soft);
   opacity: 0;
-  animation: fadeUp 1200ms var(--ease) 1600ms forwards, bob 2.4s ease-in-out infinite 2.8s;
+  animation: scrollCueIn 1200ms var(--ease) 1600ms forwards, bob 2.4s ease-in-out infinite 2.8s;
+}
+@keyframes scrollCueIn {
+  from { opacity: 0; transform: translate(-50%, 24px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
 }
 .scroll-cue::before {
   content: '';
@@ -777,7 +784,10 @@ footer small {
 
 <!-- ╭──── HERO ────────────────────────────────────────────────────────╮ -->
 <header class="hero" id="top">
-  <div class="hero-bg" aria-hidden="true"></div>
+  <div class="hero-bg" aria-hidden="true">
+    <div class="hero-bg-layer morning"></div>
+    <div class="hero-bg-layer night"></div>
+  </div>
   <div class="celestial-body" aria-hidden="true"></div>
   <div class="hero-content">
     <p class="eyebrow" data-bind="heroEyebrow">Together with their families</p>
@@ -978,7 +988,7 @@ document.querySelectorAll('[data-bind]').forEach(el => {
 });
 document.getElementById('mapLink').href = CONFIG.mapsUrl;
 document.getElementById('footerSig').innerHTML = `${CONFIG.partnerA} &amp; ${CONFIG.partnerB}`;
-document.title = `${CONFIG.partnerA} & ${CONFIG.partnerB} · ${CONFIG.displayDate.replace(/[^\d]/g, '.')}`;
+document.title = `${CONFIG.partnerA} & ${CONFIG.partnerB} · ${CONFIG.displayDate}`;
 
 /* ══════════════════════════════════════════════════════════════════════
    RENDER SCHEDULE
@@ -1143,15 +1153,21 @@ document.title = `${CONFIG.partnerA} & ${CONFIG.partnerB} · ${CONFIG.displayDat
 })();
 
 /* ══════════════════════════════════════════════════════════════════════
-   PARALLAX on the celestial body
+   CELESTIAL MOTION — combined bob + scroll parallax in one rAF loop so
+   they can't fight each other (previous CSS animation was overriding the
+   scroll-driven inline transform, leaving the parallax visually dead).
    ══════════════════════════════════════════════════════════════════════ */
-(function parallax() {
+(function celestialMotion() {
   const body = document.querySelector('.celestial-body');
-  if (!body || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  window.addEventListener('scroll', () => {
-    const y = window.scrollY;
-    body.style.transform = `translateX(-50%) translateY(${y * 0.35}px)`;
-  }, { passive: true });
+  if (!body) return;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function loop(t) {
+    const bob = reduced ? 0 : Math.sin(t / 1500) * 7;
+    const parallax = window.scrollY * 0.35;
+    body.style.transform = `translateX(-50%) translateY(${parallax + bob}px)`;
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
 })();
 
 /* ══════════════════════════════════════════════════════════════════════
