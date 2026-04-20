@@ -751,13 +751,14 @@ footer small {
      (landscape images get heavily cropped under `cover` on a portrait phone,
      but `contain` leaves the photo too small — this sits between). */
   .hero-bg-layer {
-    background-size: auto 88%;
+    background-size: auto 75%;
     background-repeat: no-repeat;
     background-position: center 22%;
     transform: none;
   }
   /* Tighten letter-spacing and vertical rhythm so text fits cleanly */
   .hero { padding: clamp(2rem, 6vh, 3.5rem) var(--gutter) 3rem; }
+  .couple { font-size: clamp(2.2rem, 9.2vw, 3.4rem); letter-spacing: 0; }
   .eyebrow { letter-spacing: 0.3em; margin-bottom: 1.8rem; font-size: 0.7rem; }
   .hero-date { letter-spacing: 0.36em; margin-top: 1.8rem; font-size: 1rem; }
   .hero-loc { letter-spacing: 0.28em; margin-bottom: 1.5rem; font-size: 0.7rem; }
