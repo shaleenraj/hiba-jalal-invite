@@ -154,8 +154,8 @@ html[data-theme="night"] .theme-toggle .moon { display: block; }
 .hero {
   min-height: 100vh;
   display: grid;
-  place-items: center;
-  padding: 6rem var(--gutter) 4rem;
+  place-items: start center;
+  padding: clamp(3rem, 8vh, 5.5rem) var(--gutter) 4rem;
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -788,7 +788,6 @@ footer small {
     <div class="hero-bg-layer morning"></div>
     <div class="hero-bg-layer night"></div>
   </div>
-  <div class="celestial-body" aria-hidden="true"></div>
   <div class="hero-content">
     <p class="eyebrow" data-bind="heroEyebrow">Together with their families</p>
     <h1 class="couple">
@@ -798,7 +797,6 @@ footer small {
     </h1>
     <p class="hero-date" data-bind="displayDate">30 · 05 · 2026</p>
     <p class="hero-loc" data-bind="heroLocation">Marrakesh · Morocco</p>
-    <a href="#rsvp" class="btn primary" data-bind="ctaRsvp">RSVP</a>
   </div>
   <div class="scroll-cue">Scroll</div>
 </header>
@@ -864,38 +862,6 @@ footer small {
           Please avoid white and beige.
         </p>
       </article>
-    </div>
-  </div>
-</section>
-
-<!-- ╭──── RSVP ────────────────────────────────────────────────────────╮ -->
-<section class="rsvp" id="rsvp">
-  <div class="shell reveal">
-    <span class="section-eyebrow" data-bind="rsvpEyebrow">Kindly Respond</span>
-    <h2 class="section-title" data-bind="rsvpTitle">RSVP</h2>
-    <div class="divider"><span class="divider-ornament">✦</span></div>
-    <p class="rsvp-deadline" data-bind="rsvpDeadline">by April 30, 2026</p>
-    <form class="rsvp-form" id="rsvpForm" novalidate>
-      <div>
-        <label for="rsvp-name">Full Name</label>
-        <input id="rsvp-name" name="name" type="text" required autocomplete="name" placeholder="Your full name" />
-      </div>
-      <div>
-        <label for="rsvp-attend">Attendance</label>
-        <select id="rsvp-attend" name="attending" required>
-          <option value="">— Select —</option>
-          <option value="yes">Joyfully attending</option>
-          <option value="no">Regretfully declining</option>
-        </select>
-      </div>
-      <div>
-        <label for="rsvp-guests">Number of Guests</label>
-        <input id="rsvp-guests" name="guests" type="number" min="1" max="10" value="1" />
-      </div>
-      <button type="submit">Send Response</button>
-    </form>
-    <div class="rsvp-success" id="rsvpSuccess" role="status">
-      Thank you — your response has been received.
     </div>
   </div>
 </section>
@@ -1170,42 +1136,6 @@ document.title = `${CONFIG.partnerA} & ${CONFIG.partnerB} · ${CONFIG.displayDat
   requestAnimationFrame(loop);
 })();
 
-/* ══════════════════════════════════════════════════════════════════════
-   RSVP SUBMIT
-   - If CONFIG.rsvpEndpoint is set → POST JSON there (Formspree, Getform, etc.)
-   - Else → open mail client with a pre-filled message to CONFIG.rsvpEmail
-   ══════════════════════════════════════════════════════════════════════ */
-(function rsvp() {
-  const form = document.getElementById('rsvpForm');
-  const success = document.getElementById('rsvpSuccess');
-  form.addEventListener('submit', async (ev) => {
-    ev.preventDefault();
-    const data = Object.fromEntries(new FormData(form).entries());
-
-    if (CONFIG.rsvpEndpoint) {
-      try {
-        const res = await fetch(CONFIG.rsvpEndpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-          body: JSON.stringify(data),
-        });
-        if (!res.ok) throw new Error('Submission failed');
-        form.style.display = 'none';
-        success.classList.add('shown');
-      } catch (e) {
-        alert('Something went wrong. Please try again or email ' + CONFIG.rsvpEmail);
-      }
-    } else {
-      const subject = encodeURIComponent(`RSVP — ${data.name}`);
-      const body = encodeURIComponent(
-        `Name: ${data.name}\nAttending: ${data.attending}\nGuests: ${data.guests}`
-      );
-      window.location.href = `mailto:${CONFIG.rsvpEmail}?subject=${subject}&body=${body}`;
-      form.style.display = 'none';
-      success.classList.add('shown');
-    }
-  });
-})();
 </script>
 </body>
 </html>
