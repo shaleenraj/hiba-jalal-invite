@@ -747,7 +747,15 @@ footer small {
 @media (max-width: 640px) {
   :root { --gutter: 1.25rem; }
 
-  /* Hero — tighten letter-spacing and vertical rhythm so text fits cleanly */
+  /* Hero — show more of the backdrop photo on narrow viewports
+     (landscape images get heavily cropped under `cover` on a portrait phone) */
+  .hero-bg-layer {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center 18%;
+    transform: none;
+  }
+  /* Tighten letter-spacing and vertical rhythm so text fits cleanly */
   .hero { padding: clamp(2rem, 6vh, 3.5rem) var(--gutter) 3rem; }
   .eyebrow { letter-spacing: 0.3em; margin-bottom: 1.8rem; font-size: 0.7rem; }
   .hero-date { letter-spacing: 0.36em; margin-top: 1.8rem; font-size: 1rem; }
