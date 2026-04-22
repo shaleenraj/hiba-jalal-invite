@@ -630,6 +630,20 @@ html[data-theme="night"] .schedule-thumb {
   margin: 0.3rem 0;
   font-size: 0.98rem;
 }
+.attire-img {
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  margin: 0 auto 1.2rem;
+  filter: drop-shadow(0 10px 24px color-mix(in srgb, var(--accent) 18%, transparent));
+  transition: filter 800ms;
+}
+html[data-theme="night"] .attire-img {
+  filter:
+    drop-shadow(0 10px 24px color-mix(in srgb, var(--gold) 30%, transparent))
+    brightness(1.04);
+}
 .detail-card .map-link {
   display: inline-block;
   margin-top: 1.2rem;
@@ -906,6 +920,7 @@ footer small {
       </article>
       <article class="detail-card">
         <h3 data-bind="attireHeading">Attire</h3>
+        <img src="assets/attire.png" alt="" class="attire-img" aria-hidden="true" />
         <p data-bind="attireBody">
           Moroccan kaftans and takchitas for women. Djellabas, jabadors or smart casual for men.
           Please avoid white and beige.
@@ -944,7 +959,7 @@ const CONFIG = {
   /* ── Venue ──────────────────────────────────────────────────── */
   venueName:    'The Levantine',
   venueAddress: 'Villa Ambre, Marrakesh',
-  mapsUrl:      'https://maps.google.com/?q=Villa+Ambre+Marrakesh',
+  mapsUrl:      'https://maps.app.goo.gl/miRM2bA2yUvdGRZn7',
   mapLabel:     'View on map ↗',
 
   /* ── Hero copy ──────────────────────────────────────────────── */
