@@ -539,14 +539,20 @@ section {
   width: 100%;
   height: auto;
   display: block;
-  mix-blend-mode: multiply;
+  /* Transparent-bg illustrations — no mix-blend needed; ink sits on top */
   filter: drop-shadow(0 10px 24px color-mix(in srgb, var(--accent) 18%, transparent));
   transition: transform 700ms var(--ease), filter 800ms;
   transform-origin: center bottom;
 }
 html[data-theme="night"] .schedule-thumb {
-  mix-blend-mode: screen;
-  filter: drop-shadow(0 10px 24px color-mix(in srgb, var(--gold) 30%, transparent)) brightness(1.1) contrast(0.95);
+  /* Invert dark ink to cream, then warm it back toward gold — illustrations
+     now glow against the night sky instead of disappearing into it. */
+  filter:
+    drop-shadow(0 10px 24px color-mix(in srgb, var(--gold) 30%, transparent))
+    invert(0.88)
+    sepia(0.35)
+    hue-rotate(-10deg)
+    brightness(1.05);
 }
 .schedule-item:hover .schedule-thumb { transform: rotate(-1.2deg) translateY(-3px) scale(1.03); }
 
