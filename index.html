@@ -769,13 +769,14 @@ footer small {
      (landscape images get heavily cropped under `cover` on a portrait phone,
      but `contain` leaves the photo too small — this sits between). */
   .hero-bg-layer {
-    background-size: auto 75%;
+    background-size: auto 92%;
     background-repeat: no-repeat;
     background-position: center top;
     transform: none;
   }
-  /* Tighten letter-spacing and vertical rhythm so text fits cleanly */
-  .hero { padding: clamp(4.5rem, 11vh, 6.5rem) var(--gutter) 3rem; }
+  /* Tighter hero footer — image fills more vertical space, less empty strip */
+  .hero { padding: clamp(4.5rem, 11vh, 6.5rem) var(--gutter) 1.2rem; }
+  .scroll-cue { bottom: 0.4rem; }
   .couple { font-size: clamp(2.2rem, 9.2vw, 3.4rem); letter-spacing: 0; }
   .eyebrow { letter-spacing: 0.3em; margin-bottom: 0.9rem; font-size: 0.7rem; }
   .hero-date { letter-spacing: 0.36em; margin: 0.9rem 0 0.2rem; font-size: 1rem; }
@@ -971,8 +972,8 @@ const CONFIG = {
   storyText:    "Where the Atlas Mountains meet the desert sky, where spice-scented souks lead to hidden gardens, where tradition meets magic — we chose Marrakech to celebrate our love.",
 
   /* ── Countdown ──────────────────────────────────────────────── */
-  countdownEyebrow: 'Counting Down',
-  countdownTitle:   'Until We Say “I Do”',
+  countdownEyebrow: 'Our Next Chapter',
+  countdownTitle:   'Begins In…',
 
   /* ── Schedule ───────────────────────────────────────────────── */
   scheduleEyebrow: 'From Dusk to Dawn',
