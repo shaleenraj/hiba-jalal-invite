@@ -550,14 +550,8 @@ section {
   transform-origin: center bottom;
 }
 html[data-theme="night"] .schedule-thumb {
-  /* Invert dark ink to cream, then warm it back toward gold — illustrations
-     now glow against the night sky instead of disappearing into it. */
-  filter:
-    drop-shadow(0 10px 24px color-mix(in srgb, var(--gold) 30%, transparent))
-    invert(0.88)
-    sepia(0.35)
-    hue-rotate(-10deg)
-    brightness(1.05);
+  /* Images are already baked gold — just swap the drop-shadow tint. */
+  filter: drop-shadow(0 10px 24px color-mix(in srgb, var(--gold) 30%, transparent));
 }
 .schedule-item:hover .schedule-thumb { transform: rotate(-1.2deg) translateY(-3px) scale(1.03); }
 
