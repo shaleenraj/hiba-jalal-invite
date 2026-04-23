@@ -769,7 +769,7 @@ footer small {
      (landscape images get heavily cropped under `cover` on a portrait phone,
      but `contain` leaves the photo too small — this sits between). */
   .hero-bg-layer {
-    background-size: auto 92%;
+    background-size: cover;
     background-repeat: no-repeat;
     background-position: center top;
     transform: none;
@@ -796,12 +796,14 @@ footer small {
   .countdown-num { font-size: 1.8rem; }
   .countdown-label { font-size: 0.55rem; letter-spacing: 0.22em; margin-top: 0.5rem; }
 
-  /* Schedule */
-  .schedule-timeline::before { left: calc(56px + 0.9rem); }
-  .schedule-item { grid-template-columns: 56px 0.9rem 1fr; column-gap: 0.9rem; padding: 1.2rem 0; }
-  .schedule-time { font-size: 0.95rem; }
-  .schedule-body h3 { font-size: 1.2rem; }
-  .schedule-body-text p { font-size: 0.92rem; }
+  /* Schedule — compacter rhythm so all items sit close together */
+  .schedule-timeline::before { left: calc(50px + 0.75rem); }
+  .schedule-item { grid-template-columns: 50px 0.75rem 1fr; column-gap: 0.75rem; padding: 0.6rem 0; }
+  .schedule-time { font-size: 0.9rem; padding-top: 0.05rem; }
+  .schedule-dot { width: 11px; height: 11px; margin-top: 0.55rem; box-shadow: 0 0 0 3px var(--sky-a), 0 0 14px 2px color-mix(in srgb, var(--accent) 50%, transparent); }
+  .schedule-body { grid-template-columns: minmax(90px, 110px) 1fr; column-gap: 1rem; }
+  .schedule-body h3 { font-size: 1.12rem; margin-bottom: 0.2rem; }
+  .schedule-body-text p { font-size: 0.88rem; line-height: 1.5; max-width: 46ch; }
 
   /* Details — stack cards, ease padding */
   .details-grid { grid-template-columns: 1fr; gap: 1.2rem; }
