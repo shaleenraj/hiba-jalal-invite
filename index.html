@@ -424,7 +424,12 @@ section {
 /* ══════════════════════════════════════════════════════════════════════
    COUNTDOWN
    ══════════════════════════════════════════════════════════════════════ */
-.countdown-wrap { text-align: center; }
+/* Numbers-only countdown — pull it tight against neighbors */
+.countdown-wrap {
+  text-align: center;
+  padding-top: clamp(2rem, 4vh, 3rem);
+  padding-bottom: clamp(2rem, 4vh, 3rem);
+}
 .countdown {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -790,7 +795,8 @@ footer small {
   .section-eyebrow { font-size: 0.66rem; letter-spacing: 0.4em; }
   .divider { margin: 1.8rem auto 2.5rem; max-width: 220px; gap: 1rem; }
 
-  /* Countdown */
+  /* Countdown — numbers only, tight vertical rhythm */
+  .countdown-wrap { padding: 1.5rem var(--gutter); }
   .countdown { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.5rem; }
   .countdown-unit { padding: 0.9rem 0.2rem; }
   .countdown-num { font-size: 1.8rem; }
@@ -898,9 +904,6 @@ footer small {
 <!-- ╭──── COUNTDOWN ───────────────────────────────────────────────────╮ -->
 <section class="countdown-wrap" id="countdown">
   <div class="shell reveal">
-    <span class="section-eyebrow" data-bind="countdownEyebrow">Counting Down</span>
-    <h2 class="section-title" data-bind="countdownTitle">Until We Say “I Do”</h2>
-    <div class="divider"><span class="divider-ornament">✦</span></div>
     <div class="countdown">
       <div class="countdown-unit"><span class="countdown-num" id="cdDays">00</span><span class="countdown-label">Days</span></div>
       <div class="countdown-unit"><span class="countdown-num" id="cdHours">00</span><span class="countdown-label">Hours</span></div>
@@ -987,10 +990,6 @@ const CONFIG = {
   storyEyebrow: 'Our Story',
   storyTitle:   'A Journey Begins',
   storyText:    "Where the Atlas Mountains meet the desert sky, where spice-scented souks lead to hidden gardens, where tradition meets magic — we chose Marrakech to celebrate our love.",
-
-  /* ── Countdown ──────────────────────────────────────────────── */
-  countdownEyebrow: 'Our Next Chapter',
-  countdownTitle:   'Begins In…',
 
   /* ── Schedule ───────────────────────────────────────────────── */
   scheduleEyebrow: 'From Dusk to Dawn',
