@@ -653,7 +653,10 @@ html[data-theme="night"] .schedule-thumb {
   filter: drop-shadow(0 10px 24px color-mix(in srgb, var(--accent) 18%, transparent));
   transition: filter 800ms;
 }
-html[data-theme="night"] .attire-img {
+.attire-img-night { display: none; }
+html[data-theme="night"] .attire-img-day { display: none; }
+html[data-theme="night"] .attire-img-night {
+  display: block;
   filter: drop-shadow(0 10px 24px color-mix(in srgb, var(--gold) 30%, transparent));
 }
 .detail-card .map-link {
@@ -948,7 +951,8 @@ footer small {
       </article>
       <article class="detail-card">
         <h3 data-bind="attireHeading">Attire</h3>
-        <img src="assets/attire.png" alt="" class="attire-img" aria-hidden="true" />
+        <img src="assets/attire.png" alt="" class="attire-img attire-img-day" aria-hidden="true" />
+        <img src="assets/attire-night.png" alt="" class="attire-img attire-img-night" aria-hidden="true" />
         <p data-bind="attireBody">
           Moroccan kaftans and takchitas for women. Djellabas, jabadors or smart casual for men.
         </p>
