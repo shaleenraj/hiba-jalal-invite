@@ -542,15 +542,30 @@ section {
 }
 .schedule-thumb {
   width: 100%;
-  height: auto;
+  aspect-ratio: 4 / 3;
   display: block;
-  /* Transparent-bg illustrations — no mix-blend needed; ink sits on top */
   filter: drop-shadow(0 10px 24px color-mix(in srgb, var(--accent) 18%, transparent));
   transition: transform 700ms var(--ease), filter 800ms;
   transform-origin: center bottom;
 }
+.schedule-thumb-img { object-fit: contain; }
+/* Monochrome mask version — shown only on night. Uses the PNG as a mask
+   and fills with the timeline body text color (var(--ink-soft) = #CDB890). */
+.schedule-thumb-mono {
+  display: none;
+  background-color: var(--ink-soft);
+  -webkit-mask-image: var(--thumb);
+  mask-image: var(--thumb);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+html[data-theme="night"] .schedule-thumb-img { display: none; }
+html[data-theme="night"] .schedule-thumb-mono { display: block; }
 html[data-theme="night"] .schedule-thumb {
-  /* Images are already baked gold — just swap the drop-shadow tint. */
   filter: drop-shadow(0 10px 24px color-mix(in srgb, var(--gold) 30%, transparent));
 }
 .schedule-item:hover .schedule-thumb { transform: rotate(-1.2deg) translateY(-3px) scale(1.03); }
@@ -1039,7 +1054,10 @@ document.title = `${CONFIG.partnerA} & ${CONFIG.partnerB} · ${CONFIG.displayDat
       <div class="schedule-time">${time}</div>
       <div class="schedule-dot" aria-hidden="true"></div>
       <div class="schedule-body">
-        ${thumb ? `<img class="schedule-thumb" src="${thumb}" alt="" loading="lazy" />` : ''}
+        ${thumb ? `
+          <img class="schedule-thumb schedule-thumb-img" src="${thumb}" alt="" loading="lazy" />
+          <span class="schedule-thumb schedule-thumb-mono" style="--thumb:url('${thumb}')" aria-hidden="true"></span>
+        ` : ''}
         <div class="schedule-body-text">
           <h3>${title}</h3>
           <p>${desc}</p>
