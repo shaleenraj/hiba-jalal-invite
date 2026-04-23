@@ -797,7 +797,8 @@ footer small {
   .countdown-label { font-size: 0.55rem; letter-spacing: 0.22em; margin-top: 0.5rem; }
 
   /* Schedule — compacter rhythm + centered dot on line + equal-height thumbs */
-  .schedule-timeline::before { left: calc(50px + 0.5rem - 1px); } /* center of col 2 */
+  /* Line sits at center of col 2 = col1 (50px) + gap (0.75rem) + half of col2 (0.5rem), minus half line-width */
+  .schedule-timeline::before { left: calc(50px + 1.25rem - 1px); }
   .schedule-item {
     grid-template-columns: 50px 1rem 1fr;
     column-gap: 0.75rem;
@@ -995,9 +996,9 @@ const CONFIG = {
   scheduleEyebrow: 'From Dusk to Dawn',
   scheduleTitle:   'The Evening',
   schedule: [
-    { time: '17:00', title: 'The Welcome',          desc: 'Mint tea & Moroccan delights: gathering in the garden as the sun sets over the Atlas Mountains.', thumb: 'assets/schedule-welcome.png' },
-    { time: '18:00', title: 'The Ammaria Entrance', desc: 'The first reveal — our grand entrance to the sounds of Dakka Marrakchia.',                        thumb: 'assets/schedule-ammaria.png' },
-    { time: '20:00', title: 'The Mida Entrance',    desc: 'The Henna Reveal: celebrating tradition as the bride is carried on the Mida.',                     thumb: 'assets/schedule-mida.png' },
+    { time: '17:00', title: 'The Welcome',          desc: 'Mint tea & Moroccan sweets in the garden.',          thumb: 'assets/schedule-welcome.png' },
+    { time: '18:00', title: 'The Ammaria Entrance', desc: 'Our grand entrance to Dakka Marrakchia drums.',      thumb: 'assets/schedule-ammaria.png' },
+    { time: '20:00', title: 'The Mida Entrance',    desc: 'The bride arrives on the Mida for the henna.',       thumb: 'assets/schedule-mida.png' },
     { time: '22:00', title: 'The Wedding Feast',    desc: 'A gourmet Moroccan dinner served under the stars.',                                                thumb: 'assets/schedule-feast.png' },
     { time: '00:00', title: 'The Grande Finale',    desc: 'The final reveal and cake cutting.',                                                               thumb: 'assets/schedule-finale.png' },
   ],
