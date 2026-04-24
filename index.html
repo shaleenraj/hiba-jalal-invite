@@ -398,11 +398,11 @@ section {
 }
 .divider-ornament { font-size: 1.1rem; transform: rotate(45deg); }
 
-/* Reveal-on-scroll */
+/* Reveal-on-scroll — snappier so nothing reads as "faded" during fast scroll */
 .reveal {
   opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 900ms var(--ease), transform 900ms var(--ease);
+  transform: translateY(16px);
+  transition: opacity 450ms var(--ease), transform 450ms var(--ease);
 }
 .reveal.shown { opacity: 1; transform: none; }
 
@@ -585,13 +585,13 @@ html[data-theme="night"] .schedule-thumb {
   max-width: 52ch;
 }
 
-/* Staggered reveal — each item pops in 180ms after its predecessor */
-.schedule-item.reveal { transition-delay: calc(var(--i, 0) * 180ms); }
+/* Staggered reveal — tight 70ms cascade so nothing lingers mid-fade */
+.schedule-item.reveal { transition-delay: calc(var(--i, 0) * 70ms); }
 .schedule-item.reveal .schedule-thumb {
   opacity: 0;
-  transform: translateY(18px) rotate(-2deg);
-  transition: opacity 900ms var(--ease), transform 900ms var(--ease);
-  transition-delay: calc(var(--i, 0) * 180ms + 200ms);
+  transform: translateY(12px) rotate(-1deg);
+  transition: opacity 400ms var(--ease), transform 400ms var(--ease);
+  transition-delay: calc(var(--i, 0) * 70ms + 80ms);
 }
 .schedule-item.reveal.shown .schedule-thumb { opacity: 1; transform: translateY(0) rotate(0); }
 
@@ -1167,7 +1167,7 @@ document.title = `${CONFIG.partnerA} & ${CONFIG.partnerB} · ${CONFIG.displayDat
         io.unobserve(e.target);
       }
     });
-  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  }, { threshold: 0.05, rootMargin: '0px 0px 80px 0px' });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 })();
 
