@@ -961,6 +961,42 @@ footer small {
   </div>
 </section>
 
+<!-- ╭──── RSVP ────────────────────────────────────────────────────────╮ -->
+<section class="rsvp" id="rsvp">
+  <div class="shell reveal">
+    <span class="section-eyebrow" data-bind="rsvpEyebrow">Kindly Respond</span>
+    <h2 class="section-title" data-bind="rsvpTitle">RSVP</h2>
+    <div class="divider"><span class="divider-ornament">✦</span></div>
+    <p class="rsvp-deadline" data-bind="rsvpDeadline">by April 30, 2026</p>
+    <form class="rsvp-form" id="rsvpForm" novalidate>
+      <div>
+        <label for="rsvp-name">Full Name</label>
+        <input id="rsvp-name" name="name" type="text" required autocomplete="name" placeholder="Your full name" />
+      </div>
+      <div>
+        <label for="rsvp-attend">Attendance</label>
+        <select id="rsvp-attend" name="attending" required>
+          <option value="">— Select —</option>
+          <option value="yes">Joyfully attending</option>
+          <option value="no">Regretfully declining</option>
+        </select>
+      </div>
+      <div>
+        <label for="rsvp-guests">Number of Guests</label>
+        <input id="rsvp-guests" name="guests" type="number" min="1" max="10" value="1" />
+      </div>
+      <div>
+        <label for="rsvp-message">A note for us (optional)</label>
+        <input id="rsvp-message" name="message" type="text" placeholder="Dietary needs, song request, well wishes…" />
+      </div>
+      <button type="submit">Send Response</button>
+    </form>
+    <div class="rsvp-success" id="rsvpSuccess" role="status">
+      Thank you — your response has been received.
+    </div>
+  </div>
+</section>
+
 </main>
 
 <footer>
@@ -1228,6 +1264,60 @@ document.title = `${CONFIG.partnerA} & ${CONFIG.partnerB} · ${CONFIG.displayDat
     requestAnimationFrame(loop);
   }
   requestAnimationFrame(loop);
+})();
+
+/* ══════════════════════════════════════════════════════════════════════
+   RSVP SUBMIT
+   GitHub Pages is static — there is no server to "save" submissions.
+   We support two paths, picked automatically from CONFIG:
+     • CONFIG.rsvpEndpoint set → POST JSON (Formspree/Getform/Web3Forms).
+     • Otherwise → open the guest's mail client pre-filled to rsvpEmail.
+   Submissions are also mirrored into localStorage under 'rs-rsvp-log'
+   so the guest sees a record of what they sent on their own device.
+   ══════════════════════════════════════════════════════════════════════ */
+(function rsvp() {
+  const form    = document.getElementById('rsvpForm');
+  const success = document.getElementById('rsvpSuccess');
+  if (!form) return;
+
+  function logLocally(entry) {
+    try {
+      const key = 'rs-rsvp-log';
+      const prev = JSON.parse(localStorage.getItem(key) || '[]');
+      prev.push({ ...entry, ts: new Date().toISOString() });
+      localStorage.setItem(key, JSON.stringify(prev));
+    } catch (_) { /* private mode / quota — ignore */ }
+  }
+
+  form.addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    const data = Object.fromEntries(new FormData(form).entries());
+    if (!data.name || !data.attending) return;
+    logLocally(data);
+
+    if (CONFIG.rsvpEndpoint) {
+      try {
+        const res = await fetch(CONFIG.rsvpEndpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        if (!res.ok) throw new Error('Submission failed');
+        form.style.display = 'none';
+        success.classList.add('shown');
+      } catch (e) {
+        alert('Something went wrong. Please email ' + CONFIG.rsvpEmail + ' instead.');
+      }
+    } else {
+      const subject = encodeURIComponent(`RSVP — ${data.name}`);
+      const body = encodeURIComponent(
+        `Name: ${data.name}\nAttending: ${data.attending}\nGuests: ${data.guests}\nNote: ${data.message || '—'}`
+      );
+      window.location.href = `mailto:${CONFIG.rsvpEmail}?subject=${subject}&body=${body}`;
+      form.style.display = 'none';
+      success.classList.add('shown');
+    }
+  });
 })();
 
 </script>
