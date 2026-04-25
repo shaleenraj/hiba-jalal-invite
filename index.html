@@ -8,7 +8,7 @@
 <title>Ryme & Shehab · Marrakech 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Great+Vibes&family=Josefin+Sans:wght@200;300;400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Great+Vibes&family=Josefin+Sans:wght@200;300;400;500&family=Amiri:ital,wght@0,400;0,700;1,400&family=Markazi+Text:wght@400;500;600&display=swap" rel="stylesheet" />
 
 <!-- ╔══════════════════════════════════════════════════════════════════╗
      ║  CUSTOMIZE YOUR INVITATION                                       ║
@@ -33,6 +33,26 @@
 
   --shell-max: 1200px;
   --gutter: clamp(1.5rem, 4vw, 3rem);
+}
+
+/* Arabic typography — Amiri serif for headlines, Markazi Text for body.
+   Falls back to Cormorant when Arabic glyphs aren't needed. */
+html[lang="ar"] {
+  --font-display: 'Amiri', 'Cormorant Garamond', Georgia, serif;
+  --font-script: 'Amiri', cursive;
+  --font-body: 'Markazi Text', 'Amiri', -apple-system, sans-serif;
+}
+html[lang="ar"] body { line-height: 1.85; letter-spacing: 0; }
+html[lang="ar"] .eyebrow,
+html[lang="ar"] .hero-loc,
+html[lang="ar"] .section-eyebrow,
+html[lang="ar"] .countdown-label,
+html[lang="ar"] .schedule-time,
+html[lang="ar"] .map-link,
+html[lang="ar"] .rsvp-form label,
+html[lang="ar"] .scroll-cue {
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 /* Day palette — warm sand, terracotta, Moroccan honey */
@@ -147,6 +167,52 @@ main, header, footer { position: relative; z-index: 2; }
 .theme-toggle .moon { display: none; }
 html[data-theme="night"] .theme-toggle .sun { display: none; }
 html[data-theme="night"] .theme-toggle .moon { display: block; }
+
+/* ══════════════════════════════════════════════════════════════════════
+   LANGUAGE TOGGLE — three pills (EN · FR · AR), top-left.
+   In RTL the position visually flips to the top-right (logical inset).
+   ══════════════════════════════════════════════════════════════════════ */
+.lang-toggle {
+  position: fixed;
+  top: clamp(1rem, 3vw, 2rem);
+  left: clamp(1rem, 3vw, 2rem);
+  z-index: 50;
+  display: flex;
+  gap: 0;
+  padding: 4px;
+  border-radius: 999px;
+  border: 1px solid var(--card-border);
+  background: var(--card);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-family: var(--font-body);
+  font-weight: 400;
+  font-size: 0.66rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transition: background 800ms, border-color 800ms;
+}
+.lang-toggle button {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  color: var(--ink-soft);
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 300ms, color 300ms;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+}
+.lang-toggle button:hover { color: var(--accent); }
+.lang-toggle button[aria-pressed="true"] {
+  background: var(--accent);
+  color: var(--sky-a);
+}
+/* In RTL, swap to top-right so the toggle stays visually on the start side. */
+html[dir="rtl"] .lang-toggle { left: auto; right: clamp(1rem, 3vw, 2rem); }
+html[dir="rtl"] .theme-toggle { right: auto; left: clamp(1rem, 3vw, 2rem); }
 
 /* ══════════════════════════════════════════════════════════════════════
    HERO
@@ -870,6 +936,12 @@ footer small {
 <canvas id="celestial" aria-hidden="true"></canvas>
 <div class="horizon" aria-hidden="true"></div>
 
+<div class="lang-toggle" id="langToggle" role="group" aria-label="Language">
+  <button type="button" data-lang="en" aria-pressed="true">EN</button>
+  <button type="button" data-lang="fr" aria-pressed="false">FR</button>
+  <button type="button" data-lang="ar" aria-pressed="false">AR</button>
+</div>
+
 <button class="theme-toggle" id="themeToggle" aria-label="Toggle day/night mode">
   <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
     <circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
@@ -970,28 +1042,28 @@ footer small {
     <p class="rsvp-deadline" data-bind="rsvpDeadline">by April 30, 2026</p>
     <form class="rsvp-form" id="rsvpForm" novalidate>
       <div>
-        <label for="rsvp-name">Full Name</label>
-        <input id="rsvp-name" name="name" type="text" required autocomplete="name" placeholder="Your full name" />
+        <label for="rsvp-name" data-bind="rsvpNameLabel">Full Name</label>
+        <input id="rsvp-name" name="name" type="text" required autocomplete="name" data-bind-attr="placeholder:rsvpNamePlaceholder" placeholder="Your full name" />
       </div>
       <div>
-        <label for="rsvp-attend">Attendance</label>
+        <label for="rsvp-attend" data-bind="rsvpAttendLabel">Attendance</label>
         <select id="rsvp-attend" name="attending" required>
-          <option value="">— Select —</option>
-          <option value="yes">Joyfully attending</option>
-          <option value="no">Regretfully declining</option>
+          <option value="" data-bind="rsvpSelectPlaceholder">— Select —</option>
+          <option value="yes" data-bind="rsvpAttendYes">Joyfully attending</option>
+          <option value="no" data-bind="rsvpAttendNo">Regretfully declining</option>
         </select>
       </div>
       <div>
-        <label for="rsvp-guests">Number of Guests</label>
+        <label for="rsvp-guests" data-bind="rsvpGuestsLabel">Number of Guests</label>
         <input id="rsvp-guests" name="guests" type="number" min="1" max="10" value="1" />
       </div>
       <div>
-        <label for="rsvp-message">A note for us (optional)</label>
-        <input id="rsvp-message" name="message" type="text" placeholder="Dietary needs, song request, well wishes…" />
+        <label for="rsvp-message" data-bind="rsvpMessageLabel">A note for us (optional)</label>
+        <input id="rsvp-message" name="message" type="text" data-bind-attr="placeholder:rsvpMessagePlaceholder" placeholder="Dietary needs, song request, well wishes…" />
       </div>
-      <button type="submit">Send Response</button>
+      <button type="submit" data-bind="rsvpSubmit">Send Response</button>
     </form>
-    <div class="rsvp-success" id="rsvpSuccess" role="status">
+    <div class="rsvp-success" id="rsvpSuccess" role="status" data-bind="rsvpSuccess">
       Thank you — your response has been received.
     </div>
   </div>
@@ -1063,6 +1135,17 @@ const CONFIG = {
   rsvpDeadline: 'by April 30, 2026',
   rsvpEndpoint: 'https://formspree.io/f/xjgjlarl',
   rsvpEmail:    'shehabyasser@gmail.com',      // ← fallback: opens user's mail client
+  rsvpNameLabel:        'Full Name',
+  rsvpNamePlaceholder:  'Your full name',
+  rsvpAttendLabel:      'Attendance',
+  rsvpSelectPlaceholder:'— Select —',
+  rsvpAttendYes:        'Joyfully attending',
+  rsvpAttendNo:         'Regretfully declining',
+  rsvpGuestsLabel:      'Number of Guests',
+  rsvpMessageLabel:     'A note for us (optional)',
+  rsvpMessagePlaceholder:'Dietary needs, song request, well wishes…',
+  rsvpSubmit:           'Send Response',
+  rsvpSuccess:          'Thank you — your response has been received.',
 
   /* ── Footer ─────────────────────────────────────────────────── */
   footerLine: 'Marrakesh · 30 · 05 · 2026',
@@ -1073,23 +1156,132 @@ const CONFIG = {
 };
 
 /* ══════════════════════════════════════════════════════════════════════
-   BIND CONFIG → DOM via [data-bind] attributes
+   TRANSLATIONS — overrides on top of CONFIG.
+   Schedule entries are full arrays; everything else is a flat key map.
+   Latin proper names (Ryme, Shehab, The Levantine) stay in Latin in all
+   locales — that's standard for Moroccan multilingual invites.
    ══════════════════════════════════════════════════════════════════════ */
-document.querySelectorAll('[data-bind]').forEach(el => {
-  const key = el.dataset.bind;
-  if (CONFIG[key] != null) el.textContent = CONFIG[key];
-});
-document.getElementById('mapLink').href = CONFIG.mapsUrl;
-document.getElementById('footerSig').innerHTML = `${CONFIG.partnerA} &amp; ${CONFIG.partnerB}`;
-document.title = `${CONFIG.partnerA} & ${CONFIG.partnerB} · ${CONFIG.displayDate}`;
+const TRANSLATIONS = {
+  fr: {
+    venueDate: 'Samedi · 30 mai 2026',
+    venueAddress: 'Villa Ambre, Marrakech',
+    mapLabel: 'Voir sur la carte ↗',
+    heroEyebrow: 'Avec leurs familles',
+    heroLocation: 'Marrakech · Maroc',
+    storyEyebrow: 'Notre Histoire',
+    storyTitle: 'Un Voyage Commence',
+    storyText: "Là où les montagnes de l'Atlas rencontrent le ciel du désert, où les souks parfumés mènent à des jardins cachés, où la tradition rencontre la magie — nous avons choisi Marrakech pour célébrer notre amour.",
+    scheduleEyebrow: 'Du Crépuscule à l\u2019Aube',
+    scheduleTitle: 'La Soirée',
+    schedule: [
+      { time: '17:00', title: 'L\u2019Accueil',             desc: 'Thé à la menthe et douceurs marocaines au jardin, alors que le soleil se couche sur les montagnes de l\u2019Atlas.', thumb: 'assets/schedule-welcome.png' },
+      { time: '18:00', title: 'L\u2019Entrée de l\u2019Ammaria', desc: 'La première révélation — notre première grande entrée aux sons de la Dakka Marrakchia.',                          thumb: 'assets/schedule-ammaria.png' },
+      { time: '20:00', title: 'L\u2019Entrée de la Mida',    desc: 'La révélation du henné — célébrant la tradition alors que la mariée et le marié sont portés sur la Mida.',         thumb: 'assets/schedule-mida.png' },
+      { time: '22:00', title: 'Le Festin Nuptial',           desc: 'Un dîner gastronomique marocain servi sous les étoiles.',                                                            thumb: 'assets/schedule-feast.png' },
+      { time: '00:00', title: 'La Grande Finale',            desc: 'La révélation finale et la découpe du gâteau.',                                                                     thumb: 'assets/schedule-finale.png' },
+    ],
+    detailsEyebrow: 'Les Détails',
+    detailsTitle: 'Où & Quoi',
+    venueHeading: 'Le Lieu',
+    attireHeading: 'Tenue',
+    attireBody: 'Caftans et takchitas marocains pour les femmes. Djellabas, jabadors ou tenue décontractée chic pour les hommes.',
+    rsvpEyebrow: 'Veuillez Répondre',
+    rsvpTitle: 'RSVP',
+    rsvpDeadline: 'avant le 30 avril 2026',
+    rsvpNameLabel: 'Nom Complet',
+    rsvpNamePlaceholder: 'Votre nom complet',
+    rsvpAttendLabel: 'Présence',
+    rsvpSelectPlaceholder: '— Choisir —',
+    rsvpAttendYes: 'J\u2019y serai avec joie',
+    rsvpAttendNo: 'Avec regret, je décline',
+    rsvpGuestsLabel: 'Nombre d\u2019Invités',
+    rsvpMessageLabel: 'Un mot pour nous (facultatif)',
+    rsvpMessagePlaceholder: 'Régime, demande de chanson, vœux…',
+    rsvpSubmit: 'Envoyer la Réponse',
+    rsvpSuccess: 'Merci — votre réponse a bien été reçue.',
+    footerLine: 'Marrakech · 30 · 05 · 2026',
+  },
+  ar: {
+    venueDate: 'السبت · ٣٠ مايو ٢٠٢٦',
+    venueAddress: 'فيلا أمبر، مراكش',
+    mapLabel: 'عرض على الخريطة ↗',
+    heroEyebrow: 'بصحبة عائلتيهما',
+    heroLocation: 'مراكش · المغرب',
+    storyEyebrow: 'قصتنا',
+    storyTitle: 'رحلة تبدأ',
+    storyText: 'حيث تلتقي جبال الأطلس بسماء الصحراء، حيث تقود الأسواق المعطّرة إلى حدائق خفيّة، حيث تلتقي التقاليد بالسحر — اخترنا مراكش لنحتفل بحبّنا.',
+    scheduleEyebrow: 'من الغروب إلى الفجر',
+    scheduleTitle: 'الأمسية',
+    schedule: [
+      { time: '١٧:٠٠', title: 'الاستقبال',         desc: 'شاي بالنعناع وحلويات مغربية في الحديقة عندما تغرب الشمس فوق جبال الأطلس.', thumb: 'assets/schedule-welcome.png' },
+      { time: '١٨:٠٠', title: 'دخول العمارية',      desc: 'الكشف الأوّل — دخولنا الكبير على إيقاعات الدقّة المراكشية.',                  thumb: 'assets/schedule-ammaria.png' },
+      { time: '٢٠:٠٠', title: 'دخول الميدة',         desc: 'كشف الحناء — احتفال بالتقاليد حيث يُحمل العروسان على الميدة.',              thumb: 'assets/schedule-mida.png' },
+      { time: '٢٢:٠٠', title: 'وليمة العرس',         desc: 'عشاء مغربي فاخر تحت النجوم.',                                                  thumb: 'assets/schedule-feast.png' },
+      { time: '٠٠:٠٠', title: 'الختام الكبير',       desc: 'الكشف الأخير وتقطيع الكعكة.',                                                  thumb: 'assets/schedule-finale.png' },
+    ],
+    detailsEyebrow: 'التفاصيل',
+    detailsTitle: 'أين وماذا',
+    venueHeading: 'المكان',
+    attireHeading: 'اللباس',
+    attireBody: 'قفطان وتكشيطة مغربية للنساء. جلابة أو جبادور أو لباس عصري أنيق للرجال.',
+    rsvpEyebrow: 'يرجى الرد',
+    rsvpTitle: 'RSVP',
+    rsvpDeadline: 'قبل ٣٠ أبريل ٢٠٢٦',
+    rsvpNameLabel: 'الاسم الكامل',
+    rsvpNamePlaceholder: 'اسمك الكامل',
+    rsvpAttendLabel: 'الحضور',
+    rsvpSelectPlaceholder: '— اختر —',
+    rsvpAttendYes: 'سأحضر بكلّ سرور',
+    rsvpAttendNo: 'أعتذر عن الحضور',
+    rsvpGuestsLabel: 'عدد الضيوف',
+    rsvpMessageLabel: 'ملاحظة لنا (اختياري)',
+    rsvpMessagePlaceholder: 'احتياجات غذائية، طلب أغنية، تمنيات…',
+    rsvpSubmit: 'إرسال الرد',
+    rsvpSuccess: 'شكراً — تم استلام ردّك.',
+    footerLine: 'مراكش · ٣٠ · ٠٥ · ٢٠٢٦',
+  },
+};
 
 /* ══════════════════════════════════════════════════════════════════════
-   RENDER SCHEDULE
+   BIND CONFIG → DOM via [data-bind] attributes
    ══════════════════════════════════════════════════════════════════════ */
-(function renderSchedule() {
+/* Reactive bind/render — re-runs whenever language changes. */
+const SUPPORTED_LANGS = ['en', 'fr', 'ar'];
+let currentLang =
+  SUPPORTED_LANGS.includes(localStorage.getItem('rs-lang')) ? localStorage.getItem('rs-lang') :
+  SUPPORTED_LANGS.find(l => (navigator.language || 'en').toLowerCase().startsWith(l)) || 'en';
+
+function getString(key) {
+  const t = TRANSLATIONS[currentLang];
+  if (t && t[key] != null) return t[key];
+  return CONFIG[key];
+}
+function getSchedule() {
+  const t = TRANSLATIONS[currentLang];
+  return (t && t.schedule) ? t.schedule : CONFIG.schedule;
+}
+
+function bindAll() {
+  document.querySelectorAll('[data-bind]').forEach(el => {
+    const v = getString(el.dataset.bind);
+    if (v != null) el.textContent = v;
+  });
+  document.querySelectorAll('[data-bind-attr]').forEach(el => {
+    el.dataset.bindAttr.split(',').forEach(pair => {
+      const [attr, key] = pair.split(':').map(s => s.trim());
+      const v = getString(key);
+      if (v != null) el.setAttribute(attr, v);
+    });
+  });
+  document.getElementById('mapLink').href = CONFIG.mapsUrl;
+  document.getElementById('footerSig').innerHTML = `${CONFIG.partnerA} &amp; ${CONFIG.partnerB}`;
+  document.title = `${CONFIG.partnerA} & ${CONFIG.partnerB} · ${CONFIG.displayDate}`;
+}
+
+function renderSchedule() {
   const list = document.getElementById('scheduleList');
-  list.innerHTML = CONFIG.schedule.map(({ time, title, desc, thumb }, i) => `
-    <div class="schedule-item reveal" style="--i:${i}">
+  list.innerHTML = getSchedule().map(({ time, title, desc, thumb }, i) => `
+    <div class="schedule-item reveal shown" style="--i:${i}">
       <div class="schedule-time">${time}</div>
       <div class="schedule-dot" aria-hidden="true"></div>
       <div class="schedule-body">
@@ -1104,7 +1296,29 @@ document.title = `${CONFIG.partnerA} & ${CONFIG.partnerB} · ${CONFIG.displayDat
       </div>
     </div>
   `).join('');
-})();
+}
+
+function applyLang(lang) {
+  if (!SUPPORTED_LANGS.includes(lang)) return;
+  currentLang = lang;
+  document.documentElement.lang = lang;
+  document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+  localStorage.setItem('rs-lang', lang);
+  bindAll();
+  renderSchedule();
+  document.querySelectorAll('#langToggle button').forEach(b => {
+    b.setAttribute('aria-pressed', String(b.dataset.lang === lang));
+  });
+}
+
+/* Initial render — apply persisted/detected language. */
+applyLang(currentLang);
+
+/* Wire language toggle. */
+document.getElementById('langToggle').addEventListener('click', (ev) => {
+  const btn = ev.target.closest('button[data-lang]');
+  if (btn) applyLang(btn.dataset.lang);
+});
 
 /* ══════════════════════════════════════════════════════════════════════
    THEME TOGGLE
