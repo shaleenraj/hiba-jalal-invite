@@ -1061,7 +1061,7 @@ footer small {
     <p class="hero-date" data-bind="displayDate">30 · 05 · 2026</p>
     <p class="hero-loc" data-bind="heroLocation">Marrakesh · Morocco</p>
   </div>
-  <div class="scroll-cue">Scroll</div>
+  <div class="scroll-cue" data-bind="scrollCue">Scroll</div>
 </header>
 
 <main>
@@ -1198,6 +1198,7 @@ const CONFIG = {
   heroEyebrow:  'In the name of God, with prayers upon His Messenger, and with hearts at peace with His decree, brimming with love — Ryme & Shehab, together with their families, are honored to invite you to celebrate their blessed wedding.',
   heroLocation: 'Marrakesh · Morocco',
   ctaRsvp:      'RSVP',
+  scrollCue:    'Scroll',
 
   /* ── Story ──────────────────────────────────────────────────── */
   storyEyebrow: 'Our Story',
@@ -1301,10 +1302,12 @@ const TRANSLATIONS = {
     rsvpMessagePlaceholder: 'Régime alimentaire, demande de chanson, vœux…',
     rsvpSubmit: 'Envoyer la réponse',
     rsvpSuccess: 'Merci — votre réponse a bien été reçue.',
+    scrollCue: 'Défiler',
     footerLine: 'Marrakech · 30 · 05 · 2026',
   },
   ar: {
     venueDate: 'السبت، ٣٠ مايو ٢٠٢٦',
+    displayDate: '٣٠ · ٠٥ · ٢٠٢٦',
     venueAddress: 'فيلا أمبر، مراكش',
     mapLabel: 'عرض على الخريطة ↗',
     heroEyebrow: 'باسم الله وبالصلاة على رسول الله، وبقلوب راضية بقضاء الله ملؤها المودة، تتشرف ريم وشهاب رفقة عائلتيهما بدعوتكم لحضور حفل زفافهما المبارك.',
@@ -1345,6 +1348,7 @@ const TRANSLATIONS = {
     rsvpMessagePlaceholder: 'احتياجات غذائية، طلب أغنية، تمنيات…',
     rsvpSubmit: 'إرسال الرد',
     rsvpSuccess: 'شكراً — تم استلام ردّك.',
+    scrollCue: 'تابع',
     footerLine: 'مراكش، ٣٠ مايو ٢٠٢٦',
   },
 };
