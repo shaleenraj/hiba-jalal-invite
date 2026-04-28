@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="day">
+<html lang="en" data-theme="night">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5" />
@@ -43,6 +43,7 @@ html[lang="ar"] {
   --font-body: 'Markazi Text', 'Amiri', -apple-system, sans-serif;
 }
 html[lang="ar"] body { line-height: 1.85; letter-spacing: 0; }
+/* Strip letter-spacing & uppercase — both break Arabic ligatures. */
 html[lang="ar"] .eyebrow,
 html[lang="ar"] .hero-loc,
 html[lang="ar"] .section-eyebrow,
@@ -50,10 +51,24 @@ html[lang="ar"] .countdown-label,
 html[lang="ar"] .schedule-time,
 html[lang="ar"] .map-link,
 html[lang="ar"] .rsvp-form label,
-html[lang="ar"] .scroll-cue {
+html[lang="ar"] .rsvp-form button,
+html[lang="ar"] .scroll-cue,
+html[lang="ar"] footer small {
   letter-spacing: 0;
   text-transform: none;
 }
+/* AR sizing — Arabic glyphs read shorter than Latin at the same px size,
+   so bump small text up to keep parity with the EN/FR design. */
+html[lang="ar"] .section-eyebrow { font-size: 1rem; }
+html[lang="ar"] .countdown-label { font-size: 0.92rem; margin-top: 0.7rem; }
+html[lang="ar"] .hero-loc { font-size: 1.05rem; }
+html[lang="ar"] .rsvp-form label { font-size: 0.98rem; margin-bottom: 0.4rem; }
+html[lang="ar"] .rsvp-form button { font-size: 1.05rem; }
+html[lang="ar"] .scroll-cue { font-size: 0.88rem; }
+html[lang="ar"] footer small { font-size: 0.95rem; }
+html[lang="ar"] .schedule-body-text p { font-size: 1.08rem; line-height: 1.8; }
+html[lang="ar"] .schedule-body-text h3 { font-size: 1.55rem; }
+html[lang="ar"] .map-link { font-size: 0.85rem; }
 
 /* Day palette — warm sand, terracotta, Moroccan honey */
 html[data-theme="day"] {
@@ -169,49 +184,89 @@ html[data-theme="night"] .theme-toggle .sun { display: none; }
 html[data-theme="night"] .theme-toggle .moon { display: block; }
 
 /* ══════════════════════════════════════════════════════════════════════
-   LANGUAGE TOGGLE — three pills (EN · FR · AR), top-left.
-   In RTL the position visually flips to the top-right (logical inset).
+   LANGUAGE TOGGLE — globe icon button + flyout menu.
+   Closed: a single circular button matching the theme toggle.
+   Open: small floating menu with the three languages.
    ══════════════════════════════════════════════════════════════════════ */
 .lang-toggle {
   position: fixed;
   top: clamp(1rem, 3vw, 2rem);
   left: clamp(1rem, 3vw, 2rem);
   z-index: 50;
-  display: flex;
-  gap: 0;
-  padding: 4px;
-  border-radius: 999px;
+}
+.lang-btn {
+  appearance: none;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
   border: 1px solid var(--card-border);
   background: var(--card);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  font-family: var(--font-body);
-  font-weight: 400;
-  font-size: 0.66rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  transition: background 800ms, border-color 800ms;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  color: var(--accent);
+  position: relative;
+  padding: 0;
+  transition: transform 600ms var(--ease), background 800ms, border-color 800ms;
 }
-.lang-toggle button {
+.lang-btn:hover { transform: rotate(-12deg) scale(1.05); }
+.lang-btn svg { width: 28px; height: 28px; }
+.lang-current {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  background: var(--accent);
+  color: var(--sky-a);
+  font-family: var(--font-body);
+  font-size: 0.55rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  padding: 2px 6px;
+  border-radius: 999px;
+  pointer-events: none;
+}
+.lang-menu {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 6px;
+  display: none;
+  flex-direction: column;
+  min-width: 150px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.22);
+  font-family: var(--font-body);
+}
+.lang-menu.open { display: flex; }
+.lang-menu button {
   appearance: none;
   background: transparent;
   border: 0;
-  color: var(--ink-soft);
-  padding: 0.35rem 0.65rem;
-  border-radius: 999px;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 0.92rem;
+  padding: 0.55rem 0.95rem;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background 300ms, color 300ms;
-  font: inherit;
-  letter-spacing: inherit;
-  text-transform: inherit;
+  text-align: left;
+  transition: background 220ms, color 220ms;
 }
-.lang-toggle button:hover { color: var(--accent); }
-.lang-toggle button[aria-pressed="true"] {
+.lang-menu button:hover { background: color-mix(in srgb, var(--accent) 14%, transparent); }
+.lang-menu button[aria-selected="true"] {
   background: var(--accent);
   color: var(--sky-a);
 }
 /* In RTL, swap to top-right so the toggle stays visually on the start side. */
 html[dir="rtl"] .lang-toggle { left: auto; right: clamp(1rem, 3vw, 2rem); }
+html[dir="rtl"] .lang-menu { left: auto; right: 0; }
+html[dir="rtl"] .lang-menu button { text-align: right; }
+html[dir="rtl"] .lang-current { right: auto; left: -4px; }
 html[dir="rtl"] .theme-toggle { right: auto; left: clamp(1rem, 3vw, 2rem); }
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -290,16 +345,26 @@ html[data-theme="night"] .celestial-body { opacity: 1; }
 
 .hero-content { position: relative; z-index: 3; max-width: 820px; }
 
+/* Ceremonial opening — multi-clause invitation text above the names. */
 .eyebrow {
-  font-family: var(--font-body);
+  font-family: var(--font-display);
   font-weight: 300;
-  font-size: 0.82rem;
-  letter-spacing: 0.42em;
-  text-transform: uppercase;
+  font-style: italic;
+  font-size: clamp(0.95rem, 2vw, 1.18rem);
+  line-height: 1.65;
+  letter-spacing: 0.02em;
+  text-transform: none;
   color: var(--ink-soft);
-  margin: 0 0 2.5rem;
+  max-width: 640px;
+  margin: 0 auto 2.5rem;
   opacity: 0;
   animation: fadeUp 1200ms var(--ease) 400ms forwards;
+}
+html[lang="ar"] .eyebrow {
+  font-style: normal;
+  font-size: clamp(1.1rem, 2.6vw, 1.4rem);
+  line-height: 1.95;
+  max-width: 660px;
 }
 
 .couple {
@@ -556,6 +621,11 @@ section {
   opacity: 0.55;
   border-radius: 2px;
 }
+/* RTL — flip line to the right side so it sits next to the dot column. */
+html[dir="rtl"] .schedule-timeline::before {
+  left: auto;
+  right: calc(80px + 1.5rem);
+}
 
 .schedule-item {
   display: grid;
@@ -719,6 +789,8 @@ html[data-theme="night"] .schedule-thumb {
   filter: drop-shadow(0 10px 24px color-mix(in srgb, var(--accent) 18%, transparent));
   transition: filter 800ms;
 }
+.attire-line { margin: 0.35rem 0; }
+.attire-line + .attire-line { margin-top: 0.55rem; }
 .attire-img-night { display: none; }
 html[data-theme="night"] .attire-img-day { display: none; }
 html[data-theme="night"] .attire-img-night {
@@ -861,9 +933,11 @@ footer small {
   .hero { padding: clamp(4.5rem, 11vh, 6.5rem) var(--gutter) 1.2rem; }
   .scroll-cue { bottom: 0.4rem; }
   .couple { font-size: clamp(2.2rem, 9.2vw, 3.4rem); letter-spacing: 0; }
-  .eyebrow { letter-spacing: 0.3em; margin-bottom: 0.9rem; font-size: 0.7rem; transform: translateY(0.6rem); }
+  .eyebrow { font-size: 0.92rem; line-height: 1.55; margin: 0 auto 1.4rem; max-width: 92%; }
+  html[lang="ar"] .eyebrow { font-size: 1.02rem; line-height: 1.85; }
   .hero-date { letter-spacing: 0.36em; margin: 0.9rem 0 0.2rem; font-size: 1rem; }
   .hero-loc { letter-spacing: 0.28em; margin-bottom: 1.5rem; font-size: 0.7rem; }
+  html[lang="ar"] .hero-loc { font-size: 0.95rem; }
   .scroll-cue { bottom: 1.25rem; font-size: 0.6rem; letter-spacing: 0.38em; }
   .scroll-cue::before { height: 28px; margin-bottom: 0.6rem; }
 
@@ -871,6 +945,7 @@ footer small {
   section { padding: 3.5rem var(--gutter); }
   .section-title { font-size: clamp(1.9rem, 7vw, 2.4rem); }
   .section-eyebrow { font-size: 0.66rem; letter-spacing: 0.4em; }
+  html[lang="ar"] .section-eyebrow { font-size: 0.95rem; }
   .divider { margin: 1.8rem auto 2.5rem; max-width: 220px; gap: 1rem; }
 
   /* Countdown — numbers only, tight vertical rhythm */
@@ -879,10 +954,12 @@ footer small {
   .countdown-unit { padding: 0.9rem 0.2rem; }
   .countdown-num { font-size: 1.8rem; }
   .countdown-label { font-size: 0.55rem; letter-spacing: 0.22em; margin-top: 0.5rem; }
+  html[lang="ar"] .countdown-label { font-size: 0.85rem; margin-top: 0.45rem; }
 
   /* Schedule — compacter rhythm + centered dot on line + equal-height thumbs */
   /* Line sits at center of col 2 = col1 (50px) + gap (0.75rem) + half of col2 (0.5rem), minus half line-width */
   .schedule-timeline::before { left: calc(50px + 1.25rem - 1px); }
+  html[dir="rtl"] .schedule-timeline::before { left: auto; right: calc(50px + 1.25rem - 1px); }
   .schedule-item {
     grid-template-columns: 50px 1rem 1fr;
     column-gap: 0.75rem;
@@ -919,6 +996,12 @@ footer small {
   footer { padding: 2.5rem var(--gutter) 2rem; }
   .footer-seal { width: 72px; margin-bottom: 0.8rem; }
   footer .sig { font-size: 1.7rem; }
+  html[lang="ar"] footer small { font-size: 0.92rem; }
+  html[lang="ar"] .rsvp-form label { font-size: 0.95rem; }
+  html[lang="ar"] .rsvp-form button { font-size: 1rem; }
+  html[lang="ar"] .scroll-cue { font-size: 0.78rem; }
+  html[lang="ar"] .schedule-body-text p { font-size: 0.95rem; line-height: 1.7; }
+  html[lang="ar"] .schedule-body-text h3 { font-size: 1.15rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -936,10 +1019,21 @@ footer small {
 <canvas id="celestial" aria-hidden="true"></canvas>
 <div class="horizon" aria-hidden="true"></div>
 
-<div class="lang-toggle" id="langToggle" role="group" aria-label="Language">
-  <button type="button" data-lang="en" aria-pressed="true">EN</button>
-  <button type="button" data-lang="fr" aria-pressed="false">FR</button>
-  <button type="button" data-lang="ar" aria-pressed="false">AR</button>
+<div class="lang-toggle" id="langToggle">
+  <button type="button" class="lang-btn" id="langBtn" aria-label="Language" aria-haspopup="menu" aria-expanded="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="9"/>
+      <path d="M3 12h18"/>
+      <path d="M12 3a13 13 0 0 1 0 18"/>
+      <path d="M12 3a13 13 0 0 0 0 18"/>
+    </svg>
+    <span class="lang-current" id="langCurrent">EN</span>
+  </button>
+  <div class="lang-menu" id="langMenu" role="menu">
+    <button type="button" data-lang="en" role="menuitem">English</button>
+    <button type="button" data-lang="fr" role="menuitem">Français</button>
+    <button type="button" data-lang="ar" role="menuitem">العربية</button>
+  </div>
 </div>
 
 <button class="theme-toggle" id="themeToggle" aria-label="Toggle day/night mode">
@@ -989,10 +1083,10 @@ footer small {
 <section class="countdown-wrap" id="countdown">
   <div class="shell reveal">
     <div class="countdown">
-      <div class="countdown-unit"><span class="countdown-num" id="cdDays">00</span><span class="countdown-label">Days</span></div>
-      <div class="countdown-unit"><span class="countdown-num" id="cdHours">00</span><span class="countdown-label">Hours</span></div>
-      <div class="countdown-unit"><span class="countdown-num" id="cdMinutes">00</span><span class="countdown-label">Minutes</span></div>
-      <div class="countdown-unit"><span class="countdown-num" id="cdSeconds">00</span><span class="countdown-label">Seconds</span></div>
+      <div class="countdown-unit"><span class="countdown-num" id="cdDays">00</span><span class="countdown-label" data-bind="cdDaysLabel">Days</span></div>
+      <div class="countdown-unit"><span class="countdown-num" id="cdHours">00</span><span class="countdown-label" data-bind="cdHoursLabel">Hours</span></div>
+      <div class="countdown-unit"><span class="countdown-num" id="cdMinutes">00</span><span class="countdown-label" data-bind="cdMinutesLabel">Minutes</span></div>
+      <div class="countdown-unit"><span class="countdown-num" id="cdSeconds">00</span><span class="countdown-label" data-bind="cdSecondsLabel">Seconds</span></div>
     </div>
   </div>
 </section>
@@ -1025,9 +1119,8 @@ footer small {
         <h3 data-bind="attireHeading">Attire</h3>
         <img src="assets/attire.png" alt="" class="attire-img attire-img-day" aria-hidden="true" />
         <img src="assets/attire-night.png" alt="" class="attire-img attire-img-night" aria-hidden="true" />
-        <p data-bind="attireBody">
-          Moroccan kaftans and takchitas for women. Djellabas, jabadors or smart casual for men.
-        </p>
+        <p class="attire-line" data-bind="attireBodyWomen">Moroccan kaftans and takchitas for women.</p>
+        <p class="attire-line" data-bind="attireBodyMen">Djellabas, jabadors or smart casual for men.</p>
       </article>
     </div>
   </div>
@@ -1102,7 +1195,7 @@ const CONFIG = {
   mapLabel:     'View on map ↗',
 
   /* ── Hero copy ──────────────────────────────────────────────── */
-  heroEyebrow:  'Together with their families',
+  heroEyebrow:  'In the name of God, with prayers upon His Messenger, and with hearts at peace with His decree, brimming with love — Ryme & Shehab, together with their families, are honored to invite you to celebrate their blessed wedding.',
   heroLocation: 'Marrakesh · Morocco',
   ctaRsvp:      'RSVP',
 
@@ -1114,6 +1207,10 @@ const CONFIG = {
   /* ── Schedule ───────────────────────────────────────────────── */
   scheduleEyebrow: 'From Dusk to Dawn',
   scheduleTitle:   'The Evening',
+  cdDaysLabel:    'Days',
+  cdHoursLabel:   'Hours',
+  cdMinutesLabel: 'Minutes',
+  cdSecondsLabel: 'Seconds',
   schedule: [
     { time: '17:00', title: 'The Welcome',          desc: 'Mint tea & Moroccan sweets in the garden as the sun sets over the Atlas mountains.',  thumb: 'assets/schedule-welcome.png' },
     { time: '18:00', title: 'The Ammaria Entrance', desc: 'The first reveal — our first grand entrance to the sounds of Dakka Marrakchia.',       thumb: 'assets/schedule-ammaria.png' },
@@ -1127,7 +1224,8 @@ const CONFIG = {
   detailsTitle:   'Where & What',
   venueHeading:   'The Venue',
   attireHeading:  'Attire',
-  attireBody:     'Moroccan kaftans and takchitas for women. Djellabas, jabadors or smart casual for men.',
+  attireBodyWomen: 'Moroccan kaftans and takchitas for women.',
+  attireBodyMen:   'Djellabas, jabadors or smart casual for men.',
 
   /* ── RSVP ───────────────────────────────────────────────────── */
   rsvpEyebrow:  'Kindly Respond',
@@ -1151,8 +1249,7 @@ const CONFIG = {
   footerLine: 'Marrakesh · 30 · 05 · 2026',
 
   /* ── Theme behaviour ────────────────────────────────────────── */
-  defaultTheme: 'day',                         // 'day' | 'night'
-  autoSwitchAtHourLocal: 19,                   // flip to night at 7pm local on first visit
+  defaultTheme: 'night',                       // 'day' | 'night' — first-visit fallback
 };
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -1166,64 +1263,74 @@ const TRANSLATIONS = {
     venueDate: 'Samedi · 30 mai 2026',
     venueAddress: 'Villa Ambre, Marrakech',
     mapLabel: 'Voir sur la carte ↗',
-    heroEyebrow: 'Avec leurs familles',
+    heroEyebrow: 'Au nom de Dieu, avec la prière sur Son Messager, et avec des cœurs sereins face à Sa volonté et emplis d’affection — Ryme & Shehab, accompagnés de leurs familles, ont l’honneur de vous convier à la célébration de leur mariage béni.',
     heroLocation: 'Marrakech · Maroc',
     storyEyebrow: 'Notre Histoire',
     storyTitle: 'Un Voyage Commence',
-    storyText: "Là où les montagnes de l'Atlas rencontrent le ciel du désert, où les souks parfumés mènent à des jardins cachés, où la tradition rencontre la magie — nous avons choisi Marrakech pour célébrer notre amour.",
+    storyText: "Là où les montagnes de l'Atlas rencontrent le ciel du désert, où les souks parfumés mènent à des jardins cachés, où la tradition rejoint la magie — nous avons choisi Marrakech pour célébrer notre amour.",
     scheduleEyebrow: 'Du Crépuscule à l\u2019Aube',
     scheduleTitle: 'La Soirée',
+    cdDaysLabel: 'Jours',
+    cdHoursLabel: 'Heures',
+    cdMinutesLabel: 'Minutes',
+    cdSecondsLabel: 'Secondes',
     schedule: [
-      { time: '17:00', title: 'L\u2019Accueil',             desc: 'Thé à la menthe et douceurs marocaines au jardin, alors que le soleil se couche sur les montagnes de l\u2019Atlas.', thumb: 'assets/schedule-welcome.png' },
-      { time: '18:00', title: 'L\u2019Entrée de l\u2019Ammaria', desc: 'La première révélation — notre première grande entrée aux sons de la Dakka Marrakchia.',                          thumb: 'assets/schedule-ammaria.png' },
-      { time: '20:00', title: 'L\u2019Entrée de la Mida',    desc: 'La révélation du henné — célébrant la tradition alors que la mariée et le marié sont portés sur la Mida.',         thumb: 'assets/schedule-mida.png' },
+      { time: '17:00', title: 'L\u2019Accueil',             desc: 'Thé à la menthe et douceurs marocaines au jardin, tandis que le soleil se couche derri\u00e8re les montagnes de l\u2019Atlas.', thumb: 'assets/schedule-welcome.png' },
+      { time: '18:00', title: 'L\u2019Entrée de l\u2019Ammaria', desc: 'La première révélation — notre grande entrée au rythme de la Dakka Marrakchia.',                          thumb: 'assets/schedule-ammaria.png' },
+      { time: '20:00', title: 'L\u2019Entrée de la Mida',    desc: 'La révélation du henné — la mariée et le marié portés sur la Mida, dans la pure tradition.',         thumb: 'assets/schedule-mida.png' },
       { time: '22:00', title: 'Le Festin Nuptial',           desc: 'Un dîner gastronomique marocain servi sous les étoiles.',                                                            thumb: 'assets/schedule-feast.png' },
       { time: '00:00', title: 'La Grande Finale',            desc: 'La révélation finale et la découpe du gâteau.',                                                                     thumb: 'assets/schedule-finale.png' },
     ],
     detailsEyebrow: 'Les Détails',
-    detailsTitle: 'Où & Quoi',
+    detailsTitle: 'Lieu & Tenue',
     venueHeading: 'Le Lieu',
     attireHeading: 'Tenue',
-    attireBody: 'Caftans et takchitas marocains pour les femmes. Djellabas, jabadors ou tenue décontractée chic pour les hommes.',
+    attireBodyWomen: 'Caftans et takchitas marocains pour les femmes.',
+    attireBodyMen: 'Djellabas, jabadors ou tenue décontractée chic pour les hommes.',
     rsvpEyebrow: 'Veuillez Répondre',
     rsvpTitle: 'RSVP',
     rsvpDeadline: 'avant le 30 avril 2026',
-    rsvpNameLabel: 'Nom Complet',
+    rsvpNameLabel: 'Nom complet',
     rsvpNamePlaceholder: 'Votre nom complet',
     rsvpAttendLabel: 'Présence',
     rsvpSelectPlaceholder: '— Choisir —',
     rsvpAttendYes: 'J\u2019y serai avec joie',
     rsvpAttendNo: 'Avec regret, je décline',
-    rsvpGuestsLabel: 'Nombre d\u2019Invités',
+    rsvpGuestsLabel: 'Nombre d\u2019invités',
     rsvpMessageLabel: 'Un mot pour nous (facultatif)',
-    rsvpMessagePlaceholder: 'Régime, demande de chanson, vœux…',
-    rsvpSubmit: 'Envoyer la Réponse',
+    rsvpMessagePlaceholder: 'Régime alimentaire, demande de chanson, vœux…',
+    rsvpSubmit: 'Envoyer la réponse',
     rsvpSuccess: 'Merci — votre réponse a bien été reçue.',
     footerLine: 'Marrakech · 30 · 05 · 2026',
   },
   ar: {
-    venueDate: 'السبت · ٣٠ مايو ٢٠٢٦',
+    venueDate: 'السبت، ٣٠ مايو ٢٠٢٦',
     venueAddress: 'فيلا أمبر، مراكش',
     mapLabel: 'عرض على الخريطة ↗',
-    heroEyebrow: 'بصحبة عائلتيهما',
-    heroLocation: 'مراكش · المغرب',
+    heroEyebrow: 'باسم الله وبالصلاة على رسول الله، وبقلوب راضية بقضاء الله ملؤها المودة، تتشرف ريم وشهاب رفقة عائلتيهما بدعوتكم لحضور حفل زفافهما المبارك.',
+    heroLocation: 'مراكش، المغرب',
     storyEyebrow: 'قصتنا',
     storyTitle: 'رحلة تبدأ',
-    storyText: 'حيث تلتقي جبال الأطلس بسماء الصحراء، حيث تقود الأسواق المعطّرة إلى حدائق خفيّة، حيث تلتقي التقاليد بالسحر — اخترنا مراكش لنحتفل بحبّنا.',
+    storyText: 'حيث تعانق جبال الأطلس سماء الصحراء، وتقود الأسواق المعطّرة إلى حدائق خفيّة، وتلتقي التقاليد بالسحر — اخترنا مراكش لنحتفل بحبّنا.',
     scheduleEyebrow: 'من الغروب إلى الفجر',
-    scheduleTitle: 'الأمسية',
+    scheduleTitle: 'برنامج الأمسية',
+    cdDaysLabel: 'يوم',
+    cdHoursLabel: 'ساعة',
+    cdMinutesLabel: 'دقيقة',
+    cdSecondsLabel: 'ثانية',
     schedule: [
-      { time: '١٧:٠٠', title: 'الاستقبال',         desc: 'شاي بالنعناع وحلويات مغربية في الحديقة عندما تغرب الشمس فوق جبال الأطلس.', thumb: 'assets/schedule-welcome.png' },
-      { time: '١٨:٠٠', title: 'دخول العمارية',      desc: 'الكشف الأوّل — دخولنا الكبير على إيقاعات الدقّة المراكشية.',                  thumb: 'assets/schedule-ammaria.png' },
-      { time: '٢٠:٠٠', title: 'دخول الميدة',         desc: 'كشف الحناء — احتفال بالتقاليد حيث يُحمل العروسان على الميدة.',              thumb: 'assets/schedule-mida.png' },
-      { time: '٢٢:٠٠', title: 'وليمة العرس',         desc: 'عشاء مغربي فاخر تحت النجوم.',                                                  thumb: 'assets/schedule-feast.png' },
-      { time: '٠٠:٠٠', title: 'الختام الكبير',       desc: 'الكشف الأخير وتقطيع الكعكة.',                                                  thumb: 'assets/schedule-finale.png' },
+      { time: '١٧:٠٠', title: 'الاستقبال',         desc: 'شاي بالنعناع وحلويات مغربية في الحديقة، حيث تغيب الشمس خلف جبال الأطلس.', thumb: 'assets/schedule-welcome.png' },
+      { time: '١٨:٠٠', title: 'دخول العمارية',      desc: 'الكشف الأوّل — دخولنا الكبير على إيقاع الدقّة المراكشية.',                  thumb: 'assets/schedule-ammaria.png' },
+      { time: '٢٠:٠٠', title: 'دخول الميدة',         desc: 'كشف الحناء — احتفال تقليديّ يُحمل فيه العروسان على الميدة.',              thumb: 'assets/schedule-mida.png' },
+      { time: '٢٢:٠٠', title: 'وليمة العرس',         desc: 'مأدبة مغربية فاخرة تحت النجوم.',                                                  thumb: 'assets/schedule-feast.png' },
+      { time: '٠٠:٠٠', title: 'الختام الكبير',       desc: 'الكشف الأخير وقطع الكعكة.',                                                  thumb: 'assets/schedule-finale.png' },
     ],
     detailsEyebrow: 'التفاصيل',
-    detailsTitle: 'أين وماذا',
+    detailsTitle: 'المكان واللباس',
     venueHeading: 'المكان',
     attireHeading: 'اللباس',
-    attireBody: 'قفطان وتكشيطة مغربية للنساء. جلابة أو جبادور أو لباس عصري أنيق للرجال.',
+    attireBodyWomen: 'قفطان وتكشيطة مغربية للنساء.',
+    attireBodyMen: 'جلابة أو جبادور أو لباس عصري أنيق للرجال.',
     rsvpEyebrow: 'يرجى الرد',
     rsvpTitle: 'RSVP',
     rsvpDeadline: 'قبل ٣٠ أبريل ٢٠٢٦',
@@ -1238,7 +1345,7 @@ const TRANSLATIONS = {
     rsvpMessagePlaceholder: 'احتياجات غذائية، طلب أغنية، تمنيات…',
     rsvpSubmit: 'إرسال الرد',
     rsvpSuccess: 'شكراً — تم استلام ردّك.',
-    footerLine: 'مراكش · ٣٠ · ٠٥ · ٢٠٢٦',
+    footerLine: 'مراكش، ٣٠ مايو ٢٠٢٦',
   },
 };
 
@@ -1306,19 +1413,38 @@ function applyLang(lang) {
   localStorage.setItem('rs-lang', lang);
   bindAll();
   renderSchedule();
-  document.querySelectorAll('#langToggle button').forEach(b => {
-    b.setAttribute('aria-pressed', String(b.dataset.lang === lang));
+  const cur = document.getElementById('langCurrent');
+  if (cur) cur.textContent = lang.toUpperCase();
+  document.querySelectorAll('#langMenu button[data-lang]').forEach(b => {
+    b.setAttribute('aria-selected', String(b.dataset.lang === lang));
   });
 }
 
 /* Initial render — apply persisted/detected language. */
 applyLang(currentLang);
 
-/* Wire language toggle. */
-document.getElementById('langToggle').addEventListener('click', (ev) => {
-  const btn = ev.target.closest('button[data-lang]');
-  if (btn) applyLang(btn.dataset.lang);
-});
+/* Wire language toggle — globe icon opens a flyout menu. */
+(function langDropdown() {
+  const btn  = document.getElementById('langBtn');
+  const menu = document.getElementById('langMenu');
+  function close() { menu.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); }
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const open = !menu.classList.contains('open');
+    menu.classList.toggle('open', open);
+    btn.setAttribute('aria-expanded', String(open));
+  });
+  menu.addEventListener('click', (e) => {
+    const item = e.target.closest('button[data-lang]');
+    if (!item) return;
+    applyLang(item.dataset.lang);
+    close();
+  });
+  document.addEventListener('click', (e) => {
+    if (!btn.contains(e.target) && !menu.contains(e.target)) close();
+  });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+})();
 
 /* ══════════════════════════════════════════════════════════════════════
    THEME TOGGLE
@@ -1329,8 +1455,7 @@ document.getElementById('langToggle').addEventListener('click', (ev) => {
   const STORAGE_KEY = 'rs-theme';
 
   const stored = localStorage.getItem(STORAGE_KEY);
-  const initial = stored || (new Date().getHours() >= CONFIG.autoSwitchAtHourLocal ? 'night' : CONFIG.defaultTheme);
-  root.setAttribute('data-theme', initial);
+  root.setAttribute('data-theme', stored || CONFIG.defaultTheme);
 
   btn.addEventListener('click', () => {
     const next = root.getAttribute('data-theme') === 'day' ? 'night' : 'day';
