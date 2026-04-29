@@ -324,10 +324,10 @@ html[data-theme="night"] .hero-bg-layer.night   { opacity: 1; }
 
 .celestial-body {
   position: absolute;
-  top: 14vh;
+  top: clamp(3rem, 7vh, 6rem);
   left: 50%;
   transform: translateX(-50%);
-  width: clamp(180px, 24vw, 320px);
+  width: clamp(140px, 18vw, 240px);
   aspect-ratio: 1;
   border-radius: 50%;
   background: var(--celestial);
@@ -362,9 +362,22 @@ html[data-theme="night"] .celestial-body { opacity: 1; }
 }
 html[lang="ar"] .eyebrow {
   font-style: normal;
-  font-size: clamp(1.1rem, 2.6vw, 1.4rem);
-  line-height: 1.95;
-  max-width: 660px;
+  font-size: clamp(1.05rem, 2.4vw, 1.3rem);
+  line-height: 1.85;
+  max-width: 620px;
+}
+/* Italic on Arabic letters distorts ligatures — keep names upright in AR. */
+html[lang="ar"] .couple .name { font-style: normal; }
+/* Arabic glyphs carry diacritics + tall ascenders — give the line breathing
+   room so names don't crowd the eyebrow above or the date below. */
+html[lang="ar"] .couple {
+  line-height: 1.35;
+  font-size: clamp(3.6rem, 12vw, 8.5rem);
+}
+html[lang="ar"] .hero-date {
+  letter-spacing: 0.08em;
+  text-indent: 0;
+  font-size: clamp(1.15rem, 2.6vw, 1.55rem);
 }
 
 .couple {
@@ -929,12 +942,16 @@ footer small {
     background-position: center top;
     transform: none;
   }
-  /* Tighter hero footer — image fills more vertical space, less empty strip */
+  /* Day mode keeps its tight padding — the morning sky doesn't carry a moon
+     for the text to clear. Night mode bumps it via the rule below. */
   .hero { padding: clamp(4.5rem, 11vh, 6.5rem) var(--gutter) 1.2rem; }
+  html[data-theme="night"] .hero { padding-top: clamp(12rem, 30vh, 15rem); }
   .scroll-cue { bottom: 0.4rem; }
   .couple { font-size: clamp(2.2rem, 9.2vw, 3.4rem); letter-spacing: 0; }
   .eyebrow { font-size: 0.92rem; line-height: 1.55; margin: 0 auto 1.4rem; max-width: 92%; }
-  html[lang="ar"] .eyebrow { font-size: 1.02rem; line-height: 1.85; }
+  html[lang="ar"] .eyebrow { font-size: 0.96rem; line-height: 1.75; }
+  html[lang="ar"] .couple { font-size: clamp(2.6rem, 11vw, 4rem); line-height: 1.35; }
+  html[lang="ar"] .hero-date { font-size: 1.05rem; letter-spacing: 0.06em; }
   .hero-date { letter-spacing: 0.36em; margin: 0.9rem 0 0.2rem; font-size: 1rem; }
   .hero-loc { letter-spacing: 0.28em; margin-bottom: 1.5rem; font-size: 0.7rem; }
   html[lang="ar"] .hero-loc { font-size: 0.95rem; }
@@ -1195,7 +1212,7 @@ const CONFIG = {
   mapLabel:     'View on map ↗',
 
   /* ── Hero copy ──────────────────────────────────────────────── */
-  heroEyebrow:  'In the name of God, with prayers upon His Messenger, and with hearts at peace with His decree, brimming with love — Ryme & Shehab, together with their families, are honored to invite you to celebrate their blessed wedding.',
+  heroEyebrow:  'With hearts full of love and gratitude, we invite you to join us as we begin this beautiful new chapter.',
   heroLocation: 'Marrakesh · Morocco',
   ctaRsvp:      'RSVP',
   scrollCue:    'Scroll',
@@ -1264,7 +1281,7 @@ const TRANSLATIONS = {
     venueDate: 'Samedi · 30 mai 2026',
     venueAddress: 'Villa Ambre, Marrakech',
     mapLabel: 'Voir sur la carte ↗',
-    heroEyebrow: 'Au nom de Dieu, avec la prière sur Son Messager, et avec des cœurs sereins face à Sa volonté et emplis d’affection — Ryme & Shehab, accompagnés de leurs familles, ont l’honneur de vous convier à la célébration de leur mariage béni.',
+    heroEyebrow: 'Le cœur rempli d’amour et de gratitude, nous vous invitons à célébrer avec nous le début de notre vie à deux.',
     heroLocation: 'Marrakech · Maroc',
     storyEyebrow: 'Notre Histoire',
     storyTitle: 'Un Voyage Commence',
@@ -1276,18 +1293,18 @@ const TRANSLATIONS = {
     cdMinutesLabel: 'Minutes',
     cdSecondsLabel: 'Secondes',
     schedule: [
-      { time: '17:00', title: 'L\u2019Accueil',             desc: 'Thé à la menthe et douceurs marocaines au jardin, tandis que le soleil se couche derri\u00e8re les montagnes de l\u2019Atlas.', thumb: 'assets/schedule-welcome.png' },
-      { time: '18:00', title: 'L\u2019Entrée de l\u2019Ammaria', desc: 'La première révélation — notre grande entrée au rythme de la Dakka Marrakchia.',                          thumb: 'assets/schedule-ammaria.png' },
-      { time: '20:00', title: 'L\u2019Entrée de la Mida',    desc: 'La révélation du henné — la mariée et le marié portés sur la Mida, dans la pure tradition.',         thumb: 'assets/schedule-mida.png' },
-      { time: '22:00', title: 'Le Festin Nuptial',           desc: 'Un dîner gastronomique marocain servi sous les étoiles.',                                                            thumb: 'assets/schedule-feast.png' },
-      { time: '00:00', title: 'La Grande Finale',            desc: 'La révélation finale et la découpe du gâteau.',                                                                     thumb: 'assets/schedule-finale.png' },
+      { time: '17:00', title: 'L\u2019Accueil',             desc: 'Thé à la menthe et douceurs marocaines au jardin, sous le soleil couchant de l\u2019Atlas.', thumb: 'assets/schedule-welcome.png' },
+      { time: '18:00', title: 'Entrée Ammariya', desc: 'Notre grande première entrée, portée par les rythmes chaleureux de la Dakka Marrakchia.',                          thumb: 'assets/schedule-ammaria.png' },
+      { time: '20:00', title: 'Entrée Mida',                desc: 'Le henné — une célébration douce et traditionnelle, avec les mariés sur la Mida.',         thumb: 'assets/schedule-mida.png' },
+      { time: '22:00', title: 'Le festin de mariage',       desc: 'Dîner marocain gourmand et raffiné, servi sous les étoiles.',                                                            thumb: 'assets/schedule-feast.png' },
+      { time: '00:00', title: 'La touche finale',           desc: 'Un dernier éclat de joie et coupe du gâteau.',                                                                     thumb: 'assets/schedule-finale.png' },
     ],
     detailsEyebrow: 'Les Détails',
     detailsTitle: 'Lieu & Tenue',
     venueHeading: 'Le Lieu',
     attireHeading: 'Tenue',
-    attireBodyWomen: 'Caftans et takchitas marocains pour les femmes.',
-    attireBodyMen: 'Djellabas, jabadors ou tenue décontractée chic pour les hommes.',
+    attireBodyWomen: 'Caftans ou takchitas marocaines pour les femmes.',
+    attireBodyMen: 'Djellabas, jabadors ou tenue chic décontractée pour les hommes.',
     rsvpEyebrow: 'Veuillez Répondre',
     rsvpTitle: 'RSVP',
     rsvpDeadline: 'avant le 30 avril 2026',
@@ -1306,8 +1323,10 @@ const TRANSLATIONS = {
     footerLine: 'Marrakech · 30 · 05 · 2026',
   },
   ar: {
-    venueDate: 'السبت، ٣٠ مايو ٢٠٢٦',
-    displayDate: '٣٠ · ٠٥ · ٢٠٢٦',
+    partnerA: 'ريم',
+    partnerB: 'شهاب',
+    venueDate: 'السبت ٣٠ مايو ٢٠٢٦',
+    displayDate: '٣٠ مايو ٢٠٢٦',
     venueAddress: 'فيلا أمبر، مراكش',
     mapLabel: 'عرض على الخريطة ↗',
     heroEyebrow: 'باسم الله وبالصلاة على رسول الله، وبقلوب راضية بقضاء الله ملؤها المودة، تتشرف ريم وشهاب رفقة عائلتيهما بدعوتكم لحضور حفل زفافهما المبارك.',
@@ -1322,11 +1341,11 @@ const TRANSLATIONS = {
     cdMinutesLabel: 'دقيقة',
     cdSecondsLabel: 'ثانية',
     schedule: [
-      { time: '١٧:٠٠', title: 'الاستقبال',         desc: 'شاي بالنعناع وحلويات مغربية في الحديقة، حيث تغيب الشمس خلف جبال الأطلس.', thumb: 'assets/schedule-welcome.png' },
-      { time: '١٨:٠٠', title: 'دخول العمارية',      desc: 'الكشف الأوّل — دخولنا الكبير على إيقاع الدقّة المراكشية.',                  thumb: 'assets/schedule-ammaria.png' },
-      { time: '٢٠:٠٠', title: 'دخول الميدة',         desc: 'كشف الحناء — احتفال تقليديّ يُحمل فيه العروسان على الميدة.',              thumb: 'assets/schedule-mida.png' },
+      { time: '١٧:٠٠', title: 'الاستقبال',         desc: 'شاي بالنعناع وحلويات مغربية في الحديقة، مع غروب الشمس فوق جبال الأطلس.', thumb: 'assets/schedule-welcome.png' },
+      { time: '١٨:٠٠', title: 'دخلة العمارية',      desc: 'دخولنا الأول الكبير، على إيقاعات الدقة المراكشية.',                  thumb: 'assets/schedule-ammaria.png' },
+      { time: '٢٠:٠٠', title: 'الميدة',              desc: 'الحناء — احتفال دافئ بالتقاليد، مع حمل العروسين على الميدة.',              thumb: 'assets/schedule-mida.png' },
       { time: '٢٢:٠٠', title: 'وليمة العرس',         desc: 'مأدبة مغربية فاخرة تحت النجوم.',                                                  thumb: 'assets/schedule-feast.png' },
-      { time: '٠٠:٠٠', title: 'الختام الكبير',       desc: 'الكشف الأخير وقطع الكعكة.',                                                  thumb: 'assets/schedule-finale.png' },
+      { time: '٠٠:٠٠', title: 'لمسة الختام',         desc: 'لحظة ختامية سعيدة متوجة بتقطيع الكعكة.',                                                  thumb: 'assets/schedule-finale.png' },
     ],
     detailsEyebrow: 'التفاصيل',
     detailsTitle: 'المكان واللباس',
@@ -1385,8 +1404,10 @@ function bindAll() {
     });
   });
   document.getElementById('mapLink').href = CONFIG.mapsUrl;
-  document.getElementById('footerSig').innerHTML = `${CONFIG.partnerA} &amp; ${CONFIG.partnerB}`;
-  document.title = `${CONFIG.partnerA} & ${CONFIG.partnerB} · ${CONFIG.displayDate}`;
+  const pA = getString('partnerA');
+  const pB = getString('partnerB');
+  document.getElementById('footerSig').innerHTML = `${pA} &amp; ${pB}`;
+  document.title = `${pA} & ${pB} · ${getString('displayDate')}`;
 }
 
 function renderSchedule() {
