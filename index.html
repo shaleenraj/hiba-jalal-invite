@@ -191,7 +191,8 @@ html[data-theme="night"] .theme-toggle .moon { display: block; }
 .lang-toggle {
   position: fixed;
   top: clamp(1rem, 3vw, 2rem);
-  left: clamp(1rem, 3vw, 2rem);
+  /* Sits to the inside of the theme toggle, both on the right edge. */
+  right: calc(clamp(1rem, 3vw, 2rem) + 58px + 12px);
   z-index: 50;
 }
 .lang-btn {
@@ -216,7 +217,8 @@ html[data-theme="night"] .theme-toggle .moon { display: block; }
 .lang-current {
   position: absolute;
   bottom: -4px;
-  right: -4px;
+  /* Badge sits on the outer (away-from-theme-button) side of the lang button. */
+  left: -4px;
   background: var(--accent);
   color: var(--sky-a);
   font-family: var(--font-body);
@@ -230,7 +232,8 @@ html[data-theme="night"] .theme-toggle .moon { display: block; }
 .lang-menu {
   position: absolute;
   top: calc(100% + 12px);
-  left: 0;
+  /* Open leftward so the menu doesn't blow off the right edge. */
+  right: 0;
   background: var(--card);
   border: 1px solid var(--card-border);
   border-radius: 14px;
@@ -262,11 +265,12 @@ html[data-theme="night"] .theme-toggle .moon { display: block; }
   background: var(--accent);
   color: var(--sky-a);
 }
-/* In RTL, swap to top-right so the toggle stays visually on the start side. */
-html[dir="rtl"] .lang-toggle { left: auto; right: clamp(1rem, 3vw, 2rem); }
-html[dir="rtl"] .lang-menu { left: auto; right: 0; }
+/* In RTL the whole pair mirrors to the left side — theme in the corner,
+   lang to its inside. Menu opens rightward, badge sits on the outer side. */
+html[dir="rtl"] .lang-toggle { right: auto; left: calc(clamp(1rem, 3vw, 2rem) + 58px + 12px); }
+html[dir="rtl"] .lang-menu { right: auto; left: 0; }
 html[dir="rtl"] .lang-menu button { text-align: right; }
-html[dir="rtl"] .lang-current { right: auto; left: -4px; }
+html[dir="rtl"] .lang-current { left: auto; right: -4px; }
 html[dir="rtl"] .theme-toggle { right: auto; left: clamp(1rem, 3vw, 2rem); }
 
 /* ══════════════════════════════════════════════════════════════════════
@@ -373,7 +377,7 @@ html[lang="ar"] .couple {
   font-family: var(--font-display);
   font-style: normal;
   line-height: 1.35;
-  font-size: clamp(3.6rem, 12vw, 8.5rem);
+  font-size: clamp(2.7rem, 9vw, 6.375rem);
 }
 /* AR uses a literal space as the separator (set via coupleSeparator) —
    strip the script-font styling so it renders as a plain word break. */
@@ -395,7 +399,7 @@ html[lang="ar"] .hero-date {
   font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
   font-style: italic;
   font-weight: 400;
-  font-size: clamp(3.4rem, 11vw, 8rem);
+  font-size: clamp(2.55rem, 8.25vw, 6rem);
   line-height: 0.95;
   margin: 0;
   color: var(--ink);
@@ -959,10 +963,10 @@ footer small {
      the menara dome. */
   .hero { padding: clamp(3rem, 7.5vh, 4.5rem) var(--gutter) 1.2rem; }
   .scroll-cue { bottom: 0.4rem; }
-  .couple { font-size: clamp(2.2rem, 9.2vw, 3.4rem); letter-spacing: 0; }
+  .couple { font-size: clamp(1.65rem, 6.9vw, 2.55rem); letter-spacing: 0; }
   .eyebrow { font-size: 0.92rem; line-height: 1.55; margin: 0 auto 1.4rem; max-width: 92%; }
   html[lang="ar"] .eyebrow { font-size: 0.96rem; line-height: 1.75; }
-  html[lang="ar"] .couple { font-size: clamp(2.6rem, 11vw, 4rem); line-height: 1.35; }
+  html[lang="ar"] .couple { font-size: clamp(1.95rem, 8.25vw, 3rem); line-height: 1.35; }
   html[lang="ar"] .hero-date { font-size: 1.05rem; letter-spacing: 0.06em; }
   .hero-date { letter-spacing: 0.36em; margin: 0.9rem 0 0.2rem; font-size: 1rem; }
   .hero-loc { letter-spacing: 0.28em; margin-bottom: 1.5rem; font-size: 0.7rem; }
@@ -1017,15 +1021,18 @@ footer small {
   .detail-card .venue-name { font-size: 1.25rem; }
   .detail-card .map-link { padding: 0.4rem 0.6rem; margin-top: 1rem; } /* larger tap area */
 
-  /* Theme + language toggles — keep them light on mobile so they don't
-     compete with the hero's moon. Lang badge shrinks with the button. */
+  /* Theme + language toggles — both clustered on the right edge on mobile,
+     theme in the corner, lang to its inside. */
   .theme-toggle { width: 38px; height: 38px; top: 0.9rem; right: 0.9rem; }
   .theme-toggle svg { width: 18px; height: 18px; }
-  .lang-toggle { top: 0.9rem; left: 0.9rem; }
+  .lang-toggle { top: 0.9rem; right: calc(0.9rem + 38px + 8px); }
   .lang-btn { width: 38px; height: 38px; }
   .lang-btn svg { width: 18px; height: 18px; }
-  .lang-current { font-size: 0.48rem; padding: 1px 4px; bottom: -3px; right: -3px; letter-spacing: 0.1em; }
-  html[dir="rtl"] .lang-current { right: auto; left: -3px; }
+  .lang-current { font-size: 0.48rem; padding: 1px 4px; bottom: -3px; left: -3px; letter-spacing: 0.1em; }
+  /* RTL — mirror the cluster to the left edge. */
+  html[dir="rtl"] .theme-toggle { right: auto; left: 0.9rem; }
+  html[dir="rtl"] .lang-toggle { right: auto; left: calc(0.9rem + 38px + 8px); }
+  html[dir="rtl"] .lang-current { left: auto; right: -3px; }
 
   /* Footer */
   footer { padding: 2.5rem var(--gutter) 2rem; }
