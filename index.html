@@ -947,6 +947,10 @@ footer small {
      for the text to clear. Night mode bumps it via the rule below. */
   .hero { padding: clamp(4.5rem, 11vh, 6.5rem) var(--gutter) 1.2rem; }
   html[data-theme="night"] .hero { padding-top: clamp(12rem, 30vh, 15rem); }
+  /* EN/FR have a shorter eyebrow than AR, so the names land on the dome roof.
+     Push them down so they sit in the same window AR settles into naturally. */
+  html[data-theme="night"][lang="en"] .hero,
+  html[data-theme="night"][lang="fr"] .hero { padding-top: clamp(14.5rem, 36vh, 17.5rem); }
   .scroll-cue { bottom: 0.4rem; }
   .couple { font-size: clamp(2.2rem, 9.2vw, 3.4rem); letter-spacing: 0; }
   .eyebrow { font-size: 0.92rem; line-height: 1.55; margin: 0 auto 1.4rem; max-width: 92%; }
@@ -1006,9 +1010,15 @@ footer small {
   .detail-card .venue-name { font-size: 1.25rem; }
   .detail-card .map-link { padding: 0.4rem 0.6rem; margin-top: 1rem; } /* larger tap area */
 
-  /* Theme toggle */
-  .theme-toggle { width: 44px; height: 44px; top: 0.9rem; right: 0.9rem; }
-  .theme-toggle svg { width: 20px; height: 20px; }
+  /* Theme + language toggles — keep them light on mobile so they don't
+     compete with the hero's moon. Lang badge shrinks with the button. */
+  .theme-toggle { width: 38px; height: 38px; top: 0.9rem; right: 0.9rem; }
+  .theme-toggle svg { width: 18px; height: 18px; }
+  .lang-toggle { top: 0.9rem; left: 0.9rem; }
+  .lang-btn { width: 38px; height: 38px; }
+  .lang-btn svg { width: 18px; height: 18px; }
+  .lang-current { font-size: 0.48rem; padding: 1px 4px; bottom: -3px; right: -3px; letter-spacing: 0.1em; }
+  html[dir="rtl"] .lang-current { right: auto; left: -3px; }
 
   /* Footer */
   footer { padding: 2.5rem var(--gutter) 2rem; }
