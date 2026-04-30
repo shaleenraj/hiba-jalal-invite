@@ -8,7 +8,7 @@
 <title>Ryme & Shehab · Marrakech 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Great+Vibes&family=Josefin+Sans:wght@200;300;400;500&family=Amiri:ital,wght@0,400;0,700;1,400&family=Markazi+Text:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Great+Vibes&family=Josefin+Sans:wght@200;300;400;500&family=Amiri:ital,wght@0,400;0,700;1,400&family=Markazi+Text:wght@400;500;600&display=swap" rel="stylesheet" />
 
 <!-- ╔══════════════════════════════════════════════════════════════════╗
      ║  CUSTOMIZE YOUR INVITATION                                       ║
@@ -366,13 +366,23 @@ html[lang="ar"] .eyebrow {
   line-height: 1.85;
   max-width: 620px;
 }
-/* Italic on Arabic letters distorts ligatures — keep names upright in AR. */
+/* Italic + Latin Didot don't apply to Arabic glyphs — fall back to the
+   Arabic display stack and keep the names upright. */
 html[lang="ar"] .couple .name { font-style: normal; }
-/* Arabic glyphs carry diacritics + tall ascenders — give the line breathing
-   room so names don't crowd the eyebrow above or the date below. */
 html[lang="ar"] .couple {
+  font-family: var(--font-display);
+  font-style: normal;
   line-height: 1.35;
   font-size: clamp(3.6rem, 12vw, 8.5rem);
+}
+/* AR uses a literal space as the separator (set via coupleSeparator) —
+   strip the script-font styling so it renders as a plain word break. */
+html[lang="ar"] .couple .amp {
+  font-family: inherit;
+  color: inherit;
+  font-size: inherit;
+  margin: 0;
+  transform: none;
 }
 html[lang="ar"] .hero-date {
   letter-spacing: 0.08em;
@@ -381,8 +391,10 @@ html[lang="ar"] .hero-date {
 }
 
 .couple {
-  font-family: var(--font-display);
-  font-weight: 300;
+  /* Didot-flavoured italic — Playfair Display is the open-source stand-in. */
+  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
   font-size: clamp(3.4rem, 11vw, 8rem);
   line-height: 0.95;
   margin: 0;
@@ -943,8 +955,9 @@ footer small {
     background-position: center top;
     transform: none;
   }
-  /* Same padding for day + night — text sits high in both modes. */
-  .hero { padding: clamp(4.5rem, 11vh, 6.5rem) var(--gutter) 1.2rem; }
+  /* Same padding for day + night — text sits high in the sky, well above
+     the menara dome. */
+  .hero { padding: clamp(3rem, 7.5vh, 4.5rem) var(--gutter) 1.2rem; }
   .scroll-cue { bottom: 0.4rem; }
   .couple { font-size: clamp(2.2rem, 9.2vw, 3.4rem); letter-spacing: 0; }
   .eyebrow { font-size: 0.92rem; line-height: 1.55; margin: 0 auto 1.4rem; max-width: 92%; }
@@ -1077,7 +1090,7 @@ footer small {
     <p class="eyebrow" data-bind="heroEyebrow">Together with their families</p>
     <h1 class="couple">
       <span class="name" data-bind="partnerA">Ryme</span>
-      <span class="amp">&amp;</span>
+      <span class="amp" data-bind="coupleSeparator">&amp;</span>
       <span class="name" data-bind="partnerB">Shehab</span>
     </h1>
     <p class="hero-date" data-bind="displayDate">30 · 05 · 2026</p>
@@ -1154,7 +1167,7 @@ footer small {
     <span class="section-eyebrow" data-bind="rsvpEyebrow">Kindly Respond</span>
     <h2 class="section-title" data-bind="rsvpTitle">RSVP</h2>
     <div class="divider"><span class="divider-ornament">✦</span></div>
-    <p class="rsvp-deadline" data-bind="rsvpDeadline">by April 30, 2026</p>
+    <p class="rsvp-deadline" data-bind="rsvpDeadline">by May 12, 2026</p>
     <form class="rsvp-form" id="rsvpForm" novalidate>
       <div>
         <label for="rsvp-name" data-bind="rsvpNameLabel">Full Name</label>
@@ -1204,6 +1217,9 @@ const CONFIG = {
   /* ── Couple ─────────────────────────────────────────────────── */
   partnerA: 'Ryme',
   partnerB: 'Shehab',
+  /* Visual separator between the two names. Latin uses '&'; AR overrides
+     to a literal space so partnerB can carry its own waw-prefix ("وشهاب"). */
+  coupleSeparator: '&',
 
   /* ── Dates ──────────────────────────────────────────────────── */
   eventDateISO: '2026-05-30T17:00:00+01:00',   // ← drives the countdown
@@ -1253,7 +1269,7 @@ const CONFIG = {
   /* ── RSVP ───────────────────────────────────────────────────── */
   rsvpEyebrow:  'Kindly Respond',
   rsvpTitle:    'RSVP',
-  rsvpDeadline: 'by April 30, 2026',
+  rsvpDeadline: 'by May 12, 2026',
   rsvpEndpoint: 'https://formspree.io/f/xjgjlarl',
   rsvpEmail:    'shehabyasser@gmail.com',      // ← fallback: opens user's mail client
   rsvpNameLabel:        'Full Name',
@@ -1312,7 +1328,7 @@ const TRANSLATIONS = {
     attireBodyMen: 'Djellabas, jabadors ou tenue chic décontractée pour les hommes.',
     rsvpEyebrow: 'Veuillez Répondre',
     rsvpTitle: 'RSVP',
-    rsvpDeadline: 'avant le 30 avril 2026',
+    rsvpDeadline: 'avant le 12 mai 2026',
     rsvpNameLabel: 'Nom complet',
     rsvpNamePlaceholder: 'Votre nom complet',
     rsvpAttendLabel: 'Présence',
@@ -1329,7 +1345,8 @@ const TRANSLATIONS = {
   },
   ar: {
     partnerA: 'ريم',
-    partnerB: 'شهاب',
+    partnerB: 'وشهاب',
+    coupleSeparator: ' ',
     venueDate: 'السبت ٣٠ مايو ٢٠٢٦',
     displayDate: '٣٠ مايو ٢٠٢٦',
     venueAddress: 'فيلا أمبر، مراكش',
@@ -1360,7 +1377,7 @@ const TRANSLATIONS = {
     attireBodyMen: 'جلابة أو جبادور أو لباس عصري أنيق للرجال.',
     rsvpEyebrow: 'يرجى الرد',
     rsvpTitle: 'RSVP',
-    rsvpDeadline: 'قبل ٣٠ أبريل ٢٠٢٦',
+    rsvpDeadline: 'قبل ١٢ مايو ٢٠٢٦',
     rsvpNameLabel: 'الاسم الكامل',
     rsvpNamePlaceholder: 'اسمك الكامل',
     rsvpAttendLabel: 'الحضور',
@@ -1411,8 +1428,10 @@ function bindAll() {
   document.getElementById('mapLink').href = CONFIG.mapsUrl;
   const pA = getString('partnerA');
   const pB = getString('partnerB');
-  document.getElementById('footerSig').innerHTML = `${pA} &amp; ${pB}`;
-  document.title = `${pA} & ${pB} · ${getString('displayDate')}`;
+  const sep = getString('coupleSeparator') || '&';
+  const sepHtml = sep === '&' ? '&amp;' : sep;
+  document.getElementById('footerSig').innerHTML = `${pA} ${sepHtml} ${pB}`;
+  document.title = `${pA} ${sep} ${pB} · ${getString('displayDate')}`;
 }
 
 function renderSchedule() {
