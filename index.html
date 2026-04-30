@@ -413,7 +413,9 @@ html[lang="ar"] .hero-date {
   color: var(--accent);
   font-size: 0.95em;
   display: inline-block;
-  margin: 0 0.18em;
+  /* Spaces around the ampersand — without these the names sit flush against
+     the glyph (HTML whitespace between sibling spans was removed). */
+  margin: 0 0.4em;
   transform: translateY(0.05em);
   transition: color 800ms;
 }
@@ -962,6 +964,10 @@ footer small {
   /* Same padding for day + night — text sits high in the sky, well above
      the menara dome. */
   .hero { padding: clamp(3rem, 7.5vh, 4.5rem) var(--gutter) 1.2rem; }
+  /* EN/FR night — drop the block down into the open zone between the moon
+     and the menara dome; AR keeps the high placement it already settled into. */
+  html[data-theme="night"][lang="en"] .hero,
+  html[data-theme="night"][lang="fr"] .hero { padding-top: clamp(13rem, 32vh, 17rem); }
   .scroll-cue { bottom: 0.4rem; }
   .couple { font-size: clamp(1.65rem, 6.9vw, 2.55rem); letter-spacing: 0; }
   .eyebrow { font-size: 0.92rem; line-height: 1.55; margin: 0 auto 1.4rem; max-width: 92%; }
@@ -1095,11 +1101,7 @@ footer small {
   </div>
   <div class="hero-content">
     <p class="eyebrow" data-bind="heroEyebrow">Together with their families</p>
-    <h1 class="couple">
-      <span class="name" data-bind="partnerA">Ryme</span>
-      <span class="amp" data-bind="coupleSeparator">&amp;</span>
-      <span class="name" data-bind="partnerB">Shehab</span>
-    </h1>
+    <h1 class="couple"><span class="name" data-bind="partnerA">Ryme</span><span class="amp" data-bind="coupleSeparator">&amp;</span><span class="name" data-bind="partnerB">Shehab</span></h1>
     <p class="hero-date" data-bind="displayDate">30 · 05 · 2026</p>
     <p class="hero-loc" data-bind="heroLocation">Marrakesh · Morocco</p>
   </div>
@@ -1358,7 +1360,7 @@ const TRANSLATIONS = {
     displayDate: '٣٠ مايو ٢٠٢٦',
     venueAddress: 'فيلا أمبر، مراكش',
     mapLabel: 'عرض على الخريطة ↗',
-    heroEyebrow: 'باسم الله وبالصلاة على رسول الله، وبقلوب راضية بقضاء الله ملؤها المودة، تتشرف ريم وشهاب رفقة عائلتيهما بدعوتكم لحضور حفل زفافهما المبارك.',
+    heroEyebrow: 'بسم الله وبالصلاة على رسول الله، وبقلوب راضية بقضاء الله ملؤها المودة، تتشرف ريم وشهاب رفقة عائلتيهما بدعوتكم لحضور حفل زفافهما المبارك.',
     heroLocation: 'مراكش، المغرب',
     storyEyebrow: 'قصتنا',
     storyTitle: 'رحلة تبدأ',
@@ -1436,9 +1438,12 @@ function bindAll() {
   const pA = getString('partnerA');
   const pB = getString('partnerB');
   const sep = getString('coupleSeparator') || '&';
-  const sepHtml = sep === '&' ? '&amp;' : sep;
-  document.getElementById('footerSig').innerHTML = `${pA} ${sepHtml} ${pB}`;
-  document.title = `${pA} ${sep} ${pB} · ${getString('displayDate')}`;
+  // For symbol separators wrap with spaces ("Ryme & Shehab"); for a literal
+  // space (Arabic) just one space — partnerB carries its own waw-prefix.
+  const couple = sep.trim() ? `${pA} ${sep} ${pB}` : `${pA} ${pB}`;
+  const coupleHtml = sep.trim() ? `${pA} ${sep === '&' ? '&amp;' : sep} ${pB}` : `${pA} ${pB}`;
+  document.getElementById('footerSig').innerHTML = coupleHtml;
+  document.title = `${couple} · ${getString('displayDate')}`;
 }
 
 function renderSchedule() {
