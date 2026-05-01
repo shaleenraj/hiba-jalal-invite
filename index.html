@@ -1407,7 +1407,16 @@ const TRANSLATIONS = {
    ══════════════════════════════════════════════════════════════════════ */
 /* Reactive bind/render — re-runs whenever language changes. */
 const SUPPORTED_LANGS = ['en', 'fr', 'ar'];
+/* Resolution order: ?lang= URL param > localStorage > browser default > en.
+   A URL param also persists to localStorage so links like ?lang=fr stay
+   French on subsequent visits/anchors. */
+const URL_LANG = (() => {
+  const v = new URLSearchParams(location.search).get('lang');
+  return v && SUPPORTED_LANGS.includes(v) ? v : null;
+})();
+if (URL_LANG) localStorage.setItem('rs-lang', URL_LANG);
 let currentLang =
+  URL_LANG ? URL_LANG :
   SUPPORTED_LANGS.includes(localStorage.getItem('rs-lang')) ? localStorage.getItem('rs-lang') :
   SUPPORTED_LANGS.find(l => (navigator.language || 'en').toLowerCase().startsWith(l)) || 'en';
 
