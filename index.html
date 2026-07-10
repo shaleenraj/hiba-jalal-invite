@@ -6,6 +6,14 @@
 <meta name="description" content="Ryme & Shehab — Join us in Marrakech, 30 May 2026." />
 <meta name="theme-color" content="#F4A261" />
 <title>Ryme & Shehab · Marrakech 2026</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23F5C45E' d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'/%3E%3C/svg%3E" />
+<link rel="canonical" href="https://shehio.github.io/ryme-shehab-invite/" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="Ryme & Shehab · Marrakech 2026" />
+<meta property="og:description" content="Ryme & Shehab — Join us in Marrakech, 30 May 2026." />
+<meta property="og:url" content="https://shehio.github.io/ryme-shehab-invite/" />
+<meta property="og:image" content="https://shehio.github.io/ryme-shehab-invite/assets/invite-poster.png" />
+<meta name="twitter:card" content="summary_large_image" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Great+Vibes&family=Josefin+Sans:wght@200;300;400;500&family=Amiri:ital,wght@0,400;0,700;1,400&family=Markazi+Text:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -627,6 +635,21 @@ section {
   color: var(--ink-soft);
   margin-top: 0.8rem;
 }
+/* Post-event state — once the date has passed, the ticking grid gives way
+   to a single celebratory line set in the same display italic as the story. */
+.countdown-passed {
+  display: none;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(1.3rem, 2.4vw, 1.7rem);
+  line-height: 1.7;
+  color: var(--ink);
+  margin: 0;
+}
+html[lang="ar"] .countdown-passed { font-style: normal; }
+.countdown-wrap.past .countdown { display: none; }
+.countdown-wrap.past .countdown-passed { display: block; }
 
 /* ══════════════════════════════════════════════════════════════════════
    SCHEDULE — timeline that visually transitions day → night
@@ -1131,6 +1154,7 @@ footer small {
       <div class="countdown-unit"><span class="countdown-num" id="cdMinutes">00</span><span class="countdown-label" data-bind="cdMinutesLabel">Minutes</span></div>
       <div class="countdown-unit"><span class="countdown-num" id="cdSeconds">00</span><span class="countdown-label" data-bind="cdSecondsLabel">Seconds</span></div>
     </div>
+    <p class="countdown-passed" data-bind="cdPassedText">Happily married · 30 May 2026</p>
   </div>
 </section>
 
@@ -1258,6 +1282,7 @@ const CONFIG = {
   cdHoursLabel:   'Hours',
   cdMinutesLabel: 'Minutes',
   cdSecondsLabel: 'Seconds',
+  cdPassedText:   'Happily married · 30 May 2026',   // ← shown once the date has passed
   schedule: [
     { time: '17:00', title: 'The Welcome',          desc: 'Mint tea & Moroccan sweets in the garden as the sun sets over the Atlas mountains.',  thumb: 'assets/schedule-welcome.png' },
     { time: '18:00', title: 'The Ammaria Entrance', desc: 'The first reveal — our first grand entrance to the sounds of Dakka Marrakchia.',       thumb: 'assets/schedule-ammaria.png' },
@@ -1321,6 +1346,7 @@ const TRANSLATIONS = {
     cdHoursLabel: 'Heures',
     cdMinutesLabel: 'Minutes',
     cdSecondsLabel: 'Secondes',
+    cdPassedText: 'Heureux mariés · 30 mai 2026',
     schedule: [
       { time: '17:00', title: 'L\u2019Accueil',             desc: 'Thé à la menthe et douceurs marocaines au jardin, sous le soleil couchant de l\u2019Atlas.', thumb: 'assets/schedule-welcome.png' },
       { time: '18:00', title: 'Entrée Ammariya', desc: 'Notre grande première entrée, portée par les rythmes chaleureux de la Dakka Marrakchia.',                          thumb: 'assets/schedule-ammaria.png' },
@@ -1370,6 +1396,7 @@ const TRANSLATIONS = {
     cdHoursLabel: 'ساعة',
     cdMinutesLabel: 'دقيقة',
     cdSecondsLabel: 'ثانية',
+    cdPassedText: 'تمّ الزفاف بحمد الله، ٣٠ مايو ٢٠٢٦',
     schedule: [
       { time: '١٧:٠٠', title: 'الاستقبال',         desc: 'شاي بالنعناع وحلويات مغربية في الحديقة، مع غروب الشمس فوق جبال الأطلس.', thumb: 'assets/schedule-welcome.png' },
       { time: '١٨:٠٠', title: 'دخلة العمارية',      desc: 'دخولنا الأول الكبير، على إيقاعات الدقة المراكشية.',                  thumb: 'assets/schedule-ammaria.png' },
@@ -1538,6 +1565,7 @@ applyLang(currentLang);
    ══════════════════════════════════════════════════════════════════════ */
 (function countdown() {
   const target = new Date(CONFIG.eventDateISO).getTime();
+  const wrap = document.getElementById('countdown');
   const els = {
     d: document.getElementById('cdDays'),
     h: document.getElementById('cdHours'),
@@ -1545,10 +1573,15 @@ applyLang(currentLang);
     s: document.getElementById('cdSeconds'),
   };
   const pad = n => String(Math.max(0, n)).padStart(2, '0');
+  let timer = null;
   function tick() {
     const diff = target - Date.now();
     if (diff <= 0) {
+      // The big day has passed — swap the ticking grid for the married line
+      // (localized via data-bind) and stop the interval.
       els.d.textContent = els.h.textContent = els.m.textContent = els.s.textContent = '00';
+      wrap.classList.add('past');
+      if (timer) clearInterval(timer);
       return;
     }
     const d = Math.floor(diff / 86400000);
@@ -1561,7 +1594,7 @@ applyLang(currentLang);
     els.s.textContent = pad(s);
   }
   tick();
-  setInterval(tick, 1000);
+  if (target - Date.now() > 0) timer = setInterval(tick, 1000);
 })();
 
 /* ══════════════════════════════════════════════════════════════════════
