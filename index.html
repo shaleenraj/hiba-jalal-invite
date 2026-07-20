@@ -16,7 +16,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&family=Great+Vibes&family=Josefin+Sans:wght@200;300;400;500&family=Amiri:ital,wght@0,400;0,700;1,400&family=Markazi+Text:wght@400;500;600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@400;700&family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Josefin+Sans:wght@200;300;400;500&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Pinyon+Script&display=swap" rel="stylesheet" />
 
 <!-- ╔══════════════════════════════════════════════════════════════════╗
      ║  CUSTOMIZE YOUR INVITATION                                       ║
@@ -32,8 +32,8 @@
    property. Switching themes = toggling [data-theme] on <html>.
    ══════════════════════════════════════════════════════════════════════ */
 :root {
-  --font-display: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
-  --font-script: 'Great Vibes', cursive;
+  --font-display: 'Bodoni Moda', Didot, 'Times New Roman', serif;
+  --font-script: 'Pinyon Script', cursive;
   --font-body: 'Josefin Sans', -apple-system, BlinkMacSystemFont, sans-serif;
 
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
@@ -43,12 +43,11 @@
   --gutter: clamp(1.5rem, 4vw, 3rem);
 }
 
-/* Arabic typography — Amiri serif for headlines, Markazi Text for body.
-   Falls back to Cormorant when Arabic glyphs aren't needed. */
+/* Arabic typography — expressive Ruqaa for headlines, readable Naskh for body. */
 html[lang="ar"] {
-  --font-display: 'Amiri', 'Cormorant Garamond', Georgia, serif;
-  --font-script: 'Amiri', cursive;
-  --font-body: 'Markazi Text', 'Amiri', -apple-system, sans-serif;
+  --font-display: 'Aref Ruqaa', 'Noto Naskh Arabic', serif;
+  --font-script: 'Aref Ruqaa', cursive;
+  --font-body: 'Noto Naskh Arabic', -apple-system, sans-serif;
 }
 html[lang="ar"] body { line-height: 1.85; letter-spacing: 0; }
 /* Strip letter-spacing & uppercase — both break Arabic ligatures. */
@@ -163,6 +162,24 @@ body {
 }
 
 main, header, footer { position: relative; z-index: 2; }
+main,
+footer {
+  background-image:
+    linear-gradient(rgba(249, 245, 236, 0.72), rgba(221, 241, 237, 0.78)),
+    url('assets/schedule_background.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  border-block: 1px solid var(--card-border);
+  transition: background-image 800ms, border-color 800ms;
+}
+html[data-theme="night"] main,
+html[data-theme="night"] footer {
+  background-image:
+    linear-gradient(rgba(6, 26, 40, 0.86), rgba(10, 49, 64, 0.84)),
+    url('assets/schedule_background.png');
+}
 
 /* ══════════════════════════════════════════════════════════════════════
    THEME TOGGLE — sun by day, crescent by night
@@ -421,8 +438,8 @@ html[lang="ar"] .hero-date {
 }
 
 .couple {
-  /* Didot-flavoured italic — Playfair Display is the open-source stand-in. */
-  font-family: 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  /* High-contrast editorial serif with a fashion-house invitation feel. */
+  font-family: var(--font-display);
   font-style: italic;
   font-weight: 400;
   font-size: clamp(2.55rem, 8.25vw, 6rem);
@@ -430,6 +447,7 @@ html[lang="ar"] .hero-date {
   margin: 0;
   color: var(--ink);
   letter-spacing: 0.01em;
+  font-feature-settings: 'liga' 1, 'kern' 1;
   opacity: 0;
   animation: fadeUp 1400ms var(--ease) 600ms forwards;
 }
@@ -711,12 +729,12 @@ html[dir="rtl"] .schedule-timeline::before {
 .schedule-time {
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: 1.25rem;
+  font-size: 1.05rem;
   color: var(--accent);
   text-align: right;
-  padding-top: 0.15rem;
+  padding-top: 0.7rem;
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.12em;
 }
 
 .schedule-dot {
@@ -747,32 +765,32 @@ html[dir="rtl"] .schedule-timeline::before {
   grid-template-columns: minmax(110px, 140px) 1fr;
   column-gap: 1.5rem;
   align-items: center;
+  color: inherit;
+  text-decoration: none;
+  border-radius: 18px;
+  padding: 0.65rem;
+  margin: -0.65rem;
+  transition: background 350ms var(--ease), transform 350ms var(--ease);
 }
+.schedule-body:hover,
+.schedule-body:focus-visible {
+  background: color-mix(in srgb, var(--card) 78%, transparent);
+  transform: translateX(4px);
+  outline: none;
+}
+html[dir="rtl"] .schedule-body:hover,
+html[dir="rtl"] .schedule-body:focus-visible { transform: translateX(-4px); }
 .schedule-thumb {
   width: 100%;
   aspect-ratio: 4 / 3;
   display: block;
+  overflow: hidden;
+  border-radius: 14px;
+  object-fit: cover;
   filter: drop-shadow(0 10px 24px color-mix(in srgb, var(--accent) 16%, transparent));
   transition: transform 700ms var(--ease), filter 800ms;
   transform-origin: center bottom;
 }
-.schedule-thumb-img { object-fit: contain; }
-/* Monochrome mask version — shown only on night. Uses the PNG as a mask
-   and fills with the timeline body text color (var(--ink-soft) = #CDB890). */
-.schedule-thumb-mono {
-  display: none;
-  background-color: var(--ink-soft);
-  -webkit-mask-image: var(--thumb);
-  mask-image: var(--thumb);
-  -webkit-mask-size: contain;
-  mask-size: contain;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-}
-html[data-theme="night"] .schedule-thumb-img { display: none; }
-html[data-theme="night"] .schedule-thumb-mono { display: block; }
 html[data-theme="night"] .schedule-thumb {
   filter: drop-shadow(0 10px 24px color-mix(in srgb, var(--gold) 30%, transparent));
 }
@@ -791,6 +809,15 @@ html[data-theme="night"] .schedule-thumb {
   color: var(--ink-soft);
   font-size: 0.98rem;
   max-width: 52ch;
+}
+.schedule-cta {
+  display: inline-block;
+  margin-top: 0.65rem;
+  color: var(--accent);
+  font-size: 0.66rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
 }
 
 /* Staggered reveal — tight 70ms cascade so nothing lingers mid-fade */
@@ -962,20 +989,24 @@ html[data-theme="night"] .attire-img-night {
    FOOTER
    ══════════════════════════════════════════════════════════════════════ */
 footer {
-  padding: 4rem var(--gutter) 3rem;
+  min-height: 100svh;
+  padding: 4rem var(--gutter);
   text-align: center;
   color: var(--ink-soft);
+  display: grid;
+  place-items: center;
 }
 .footer-seal {
-  width: 90px;
+  width: min(440px, 84vw);
   height: auto;
-  opacity: 0.85;
-  margin-bottom: 1.2rem;
+  opacity: 0.92;
+  margin: 0;
   filter: drop-shadow(0 6px 18px color-mix(in srgb, var(--accent) 22%, transparent));
   transition: filter 800ms, opacity 800ms;
 }
 html[data-theme="night"] .footer-seal { opacity: 0.92; }
 footer .sig {
+  display: none;
   font-family: var(--font-script);
   font-size: 2rem;
   color: var(--accent);
@@ -1053,9 +1084,10 @@ footer small {
     column-gap: 1rem;
     align-items: center;
   }
-  .schedule-thumb { aspect-ratio: 4 / 3; object-fit: contain; }
+  .schedule-thumb { aspect-ratio: 4 / 3; object-fit: cover; }
   .schedule-body h3 { font-size: 1rem; margin-bottom: 0.15rem; }
   .schedule-body-text p { font-size: 0.82rem; line-height: 1.45; max-width: 46ch; }
+  .schedule-cta { margin-top: 0.4rem; font-size: 0.56rem; letter-spacing: 0.14em; }
 
   /* Details — stack cards, ease padding */
   .details-grid { grid-template-columns: 1fr; gap: 1.2rem; }
@@ -1078,8 +1110,8 @@ footer small {
   html[dir="rtl"] .lang-current { left: auto; right: -3px; }
 
   /* Footer */
-  footer { padding: 2.5rem var(--gutter) 2rem; }
-  .footer-seal { width: 72px; margin-bottom: 0.8rem; }
+  footer { padding: 2.5rem var(--gutter); }
+  .footer-seal { width: min(340px, 88vw); margin: 0; }
   footer .sig { font-size: 1.7rem; }
   html[lang="ar"] footer small { font-size: 0.92rem; }
   html[lang="ar"] .rsvp-form label { font-size: 0.95rem; }
@@ -1199,8 +1231,7 @@ footer small {
       </article>
       <article class="detail-card">
         <h3 data-bind="attireHeading">Attire</h3>
-        <img src="assets/coastal-attire.svg" alt="" class="attire-img attire-img-day" aria-hidden="true" />
-        <img src="assets/coastal-attire.svg" alt="" class="attire-img attire-img-night" aria-hidden="true" />
+        <img src="assets/attire_shay_transparent.png" alt="A selection of colorful formal South Asian wedding attire" class="attire-img" />
         <p class="attire-line" data-bind="attireBodyWomen">Beach formal — flowing dresses and sunset tones.</p>
         <p class="attire-line" data-bind="attireBodyMen">Light linen, summer suits or polished separates.</p>
       </article>
@@ -1247,9 +1278,8 @@ footer small {
 </main>
 
 <footer>
-  <img src="assets/shore-mark.svg" alt="" class="footer-seal" aria-hidden="true" />
+  <img src="assets/logo_shay_transparent.png" alt="Shay and Saibari" class="footer-seal" />
   <div class="sig" id="footerSig">Shay &amp; Saibari</div>
-  <small data-bind="footerLine">Bali · 29 · 08 · 2026</small>
 </footer>
 
 <script>
@@ -1291,19 +1321,18 @@ const CONFIG = {
   storyText:    "Where warm sand meets the water and the horizon glows at golden hour, we found the perfect feeling for a celebration made of love, salt air and starlight.",
 
   /* ── Schedule ───────────────────────────────────────────────── */
-  scheduleEyebrow: 'From Sunset to Starlight',
-  scheduleTitle:   'By the Shore',
+  scheduleEyebrow: 'Four Celebrations',
+  scheduleTitle:   'The Wedding Weekend',
   cdDaysLabel:    'Days',
   cdHoursLabel:   'Hours',
   cdMinutesLabel: 'Minutes',
   cdSecondsLabel: 'Seconds',
   cdPassedText:   'Happily married · 29 August 2026', // ← shown once the date has passed
   schedule: [
-    { time: '17:00', title: 'Baraat & Milni',     desc: 'The groom’s joyful procession arrives with dhol, dancing and a warm family welcome.', thumb: 'assets/indian-baraat.svg' },
-    { time: '18:00', title: 'Varmala',             desc: 'Shay and Saibari exchange flower garlands as the sun begins to set.',               thumb: 'assets/indian-varmala.svg' },
-    { time: '19:00', title: 'Pheras & Ceremony',  desc: 'Sacred vows and seven circles around the fire beneath the wedding mandap.',          thumb: 'assets/indian-pheras.svg' },
-    { time: '21:00', title: 'Dinner & Sangeet',   desc: 'An Indian feast followed by music, performances and a dance floor for everyone.',    thumb: 'assets/indian-sangeet.svg' },
-    { time: '00:00', title: 'Vidaai',              desc: 'A heartfelt farewell and sparkling send-off beneath the midnight sky.',               thumb: 'assets/indian-vidaai.svg' },
+    { time: '01', title: 'Welcome Dinner', desc: 'A relaxed evening of warm conversation, beautiful food and the first toast of the celebration.', thumb: 'assets/event-welcome-dinner.jpg', href: 'welcome-dinner.html' },
+    { time: '02', title: 'Haldi',          desc: 'A sunlit celebration filled with turmeric, flowers, laughter and joyful family traditions.', thumb: 'assets/event-haldi.jpg', href: 'haldi.html' },
+    { time: '03', title: 'Sangeet',        desc: 'An electric evening of music, performances and dancing beneath the lights.', thumb: 'assets/event-sangeet.jpg', href: 'sangeet.html' },
+    { time: '04', title: 'Nikah',          desc: 'Our sacred ceremony, witnessed by the people we love most.', thumb: 'assets/event-nikah.jpg', href: 'nikah.html' },
   ],
 
   /* ── Details ────────────────────────────────────────────────── */
@@ -1355,19 +1384,18 @@ const TRANSLATIONS = {
     storyEyebrow: 'Notre Histoire',
     storyTitle: 'Un Voyage Commence',
     storyText: "Là où le sable chaud rencontre l’eau et où l’horizon s’illumine à l’heure dorée, nous avons trouvé l’esprit parfait pour une fête faite d’amour, d’air marin et d’étoiles.",
-    scheduleEyebrow: 'Du Couchant aux Étoiles',
-    scheduleTitle: 'Au Bord de l\u2019Eau',
+    scheduleEyebrow: 'Quatre Célébrations',
+    scheduleTitle: 'Le Week-end du Mariage',
     cdDaysLabel: 'Jours',
     cdHoursLabel: 'Heures',
     cdMinutesLabel: 'Minutes',
     cdSecondsLabel: 'Secondes',
     cdPassedText: 'Heureux mariés · 29 août 2026',
     schedule: [
-      { time: '17:00', title: 'Baraat & Milni',       desc: 'Le cortège joyeux du marié arrive au son du dhol, accueilli par les danses et les familles.', thumb: 'assets/indian-baraat.svg' },
-      { time: '18:00', title: 'Varmala',               desc: 'Shay et Saibari échangent leurs guirlandes de fleurs tandis que le soleil se couche.',         thumb: 'assets/indian-varmala.svg' },
-      { time: '19:00', title: 'Pheras & Cérémonie',   desc: 'Vœux sacrés et sept tours autour du feu sous le mandap.',                           thumb: 'assets/indian-pheras.svg' },
-      { time: '21:00', title: 'Dîner & Sangeet',      desc: 'Un festin indien suivi de musique, de spectacles et d’une piste de danse ouverte à tous.',    thumb: 'assets/indian-sangeet.svg' },
-      { time: '00:00', title: 'Vidaai',                desc: 'Des adieux pleins d’émotion et un départ étincelant sous le ciel de minuit.',                   thumb: 'assets/indian-vidaai.svg' },
+      { time: '01', title: 'Dîner de bienvenue', desc: 'Une soirée détendue, de beaux plats et le premier toast de la célébration.', thumb: 'assets/event-welcome-dinner.jpg', href: 'welcome-dinner.html' },
+      { time: '02', title: 'Haldi', desc: 'Une célébration solaire, pleine de curcuma, de fleurs, de rires et de traditions familiales.', thumb: 'assets/event-haldi.jpg', href: 'haldi.html' },
+      { time: '03', title: 'Sangeet', desc: 'Une soirée vibrante de musique, de spectacles et de danse sous les lumières.', thumb: 'assets/event-sangeet.jpg', href: 'sangeet.html' },
+      { time: '04', title: 'Nikah', desc: 'Notre cérémonie sacrée, entourés des personnes que nous aimons le plus.', thumb: 'assets/event-nikah.jpg', href: 'nikah.html' },
     ],
     detailsEyebrow: 'Les Détails',
     detailsTitle: 'Détails Côté Plage',
@@ -1406,19 +1434,18 @@ const TRANSLATIONS = {
     storyEyebrow: 'قصتنا',
     storyTitle: 'رحلة تبدأ',
     storyText: 'حيث يلتقي الرمل الدافئ بالماء ويتوهّج الأفق في الساعة الذهبية، وجدنا الإحساس المثالي لاحتفالٍ يملؤه الحب ونسيم البحر وضوء النجوم.',
-    scheduleEyebrow: 'من الغروب إلى ضوء النجوم',
-    scheduleTitle: 'على الشاطئ',
+    scheduleEyebrow: 'أربع احتفالات',
+    scheduleTitle: 'عطلة الزفاف',
     cdDaysLabel: 'يوم',
     cdHoursLabel: 'ساعة',
     cdMinutesLabel: 'دقيقة',
     cdSecondsLabel: 'ثانية',
     cdPassedText: 'تمّ الزفاف بحمد الله، ٢٩ أغسطس ٢٠٢٦',
     schedule: [
-      { time: '١٧:٠٠', title: 'البارات والميلني',    desc: 'يصل موكب العريس المبهج على إيقاع الدهول والرقص وسط ترحيب العائلتين.', thumb: 'assets/indian-baraat.svg' },
-      { time: '١٨:٠٠', title: 'الفارمالا',            desc: 'يتبادل شاي وسايباري أكاليل الزهور مع بداية غروب الشمس.',               thumb: 'assets/indian-varmala.svg' },
-      { time: '١٩:٠٠', title: 'الفيراس والمراسم',    desc: 'عهود مقدسة وسبع دورات حول النار تحت المانداب.',                       thumb: 'assets/indian-pheras.svg' },
-      { time: '٢١:٠٠', title: 'العشاء والسانغيت',    desc: 'وليمة هندية تليها الموسيقى والعروض والرقص للجميع.',                     thumb: 'assets/indian-sangeet.svg' },
-      { time: '٠٠:٠٠', title: 'الفيداي',              desc: 'وداع مؤثر وانطلاقة متلألئة تحت سماء منتصف الليل.',                    thumb: 'assets/indian-vidaai.svg' },
+      { time: '٠١', title: 'عشاء الترحيب', desc: 'أمسية هادئة من اللقاء والطعام الجميل وأول نخب للاحتفال.', thumb: 'assets/event-welcome-dinner.jpg', href: 'welcome-dinner.html' },
+      { time: '٠٢', title: 'الهالدي', desc: 'احتفال مشمس بالكركم والزهور والضحكات والتقاليد العائلية الجميلة.', thumb: 'assets/event-haldi.jpg', href: 'haldi.html' },
+      { time: '٠٣', title: 'السانغيت', desc: 'أمسية نابضة بالموسيقى والعروض والرقص تحت الأضواء.', thumb: 'assets/event-sangeet.jpg', href: 'sangeet.html' },
+      { time: '٠٤', title: 'النكاح', desc: 'مراسمنا المقدسة بحضور أحبّ الناس إلى قلوبنا.', thumb: 'assets/event-nikah.jpg', href: 'nikah.html' },
     ],
     detailsEyebrow: 'التفاصيل',
     detailsTitle: 'تفاصيل الشاطئ',
@@ -1499,20 +1526,21 @@ function bindAll() {
 
 function renderSchedule() {
   const list = document.getElementById('scheduleList');
-  list.innerHTML = getSchedule().map(({ time, title, desc, thumb }, i) => `
+  const cta = currentLang === 'fr' ? 'Découvrir' : currentLang === 'ar' ? 'اكتشفوا المناسبة' : 'Explore event';
+  list.innerHTML = getSchedule().map(({ time, title, desc, thumb, href }, i) => `
     <div class="schedule-item reveal shown" style="--i:${i}">
       <div class="schedule-time">${time}</div>
       <div class="schedule-dot" aria-hidden="true"></div>
-      <div class="schedule-body">
+      <a class="schedule-body" href="${href}">
         ${thumb ? `
           <img class="schedule-thumb schedule-thumb-img" src="${thumb}" alt="" loading="lazy" />
-          <span class="schedule-thumb schedule-thumb-mono" style="--thumb:url('${thumb}')" aria-hidden="true"></span>
         ` : ''}
         <div class="schedule-body-text">
           <h3>${title}</h3>
           <p>${desc}</p>
+          <span class="schedule-cta">${cta} ↗</span>
         </div>
-      </div>
+      </a>
     </div>
   `).join('');
 }
