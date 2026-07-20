@@ -1,4 +1,4 @@
-# Shay & Saibari — Marrakech · 30 May 2026
+# Shay & Saibari — The Apurva Kempinski Bali · 29 August 2026
 
 Our wedding invitation site: a single self-contained HTML page, kept as a keepsake now that the big day has passed.
 
@@ -7,7 +7,7 @@ Our wedding invitation site: a single self-contained HTML page, kept as a keepsa
 ## Features
 
 - Trilingual — English, Français, العربية (full RTL), switchable via the globe toggle or `?lang=en|fr|ar`
-- Day / night theme with cross-fading hero photos, canvas stars and gold dust
+- Day / night beach theme with cross-fading coastal photos, canvas stars and sea-spray shimmer
 - Countdown to the ceremony (shows a "happily married" line now that the date has passed)
 - Schedule timeline, venue & attire cards, RSVP form (Formspree, with mailto fallback)
 - No framework, no build step — everything lives in `index.html`

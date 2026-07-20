@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 480">
+  <defs>
+    <linearGradient id="dress" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#F4C77A"/>
+      <stop offset="1" stop-color="#D96C5F"/>
+    </linearGradient>
+    <linearGradient id="linen" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#F9F5EC"/>
+      <stop offset="1" stop-color="#B7DEDA"/>
+    </linearGradient>
+  </defs>
+  <circle cx="400" cy="220" r="178" fill="#DDF1ED" opacity=".72"/>
+  <path d="M72 402c72-28 144-28 216 0s144 28 216 0 144-28 216 0" fill="none" stroke="#54AAA7" stroke-width="14" stroke-linecap="round"/>
+  <g stroke="#17353D" stroke-width="8" stroke-linejoin="round">
+    <circle cx="292" cy="112" r="36" fill="#F4C7A8"/>
+    <path d="M257 153c-26 52-51 129-69 225h209c-20-97-45-172-71-225-19 12-50 12-69 0z" fill="url(#dress)"/>
+    <path d="M257 170l-49 118m118-118 49 118" fill="none" stroke-linecap="round"/>
+    <circle cx="516" cy="112" r="36" fill="#E7B892"/>
+    <path d="M465 158l51-17 51 17 23 191H442z" fill="url(#linen)"/>
+    <path d="M516 142v205m-50-189-44 111m144-111 44 111" fill="none" stroke-linecap="round"/>
+    <path d="M442 349h148l22 31H420z" fill="#0B6B73"/>
+  </g>
+  <g fill="#D96C5F">
+    <circle cx="137" cy="122" r="11"/><circle cx="665" cy="104" r="9"/><circle cx="697" cy="145" r="7"/>
+  </g>
+</svg>
