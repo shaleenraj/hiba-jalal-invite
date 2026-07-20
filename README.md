@@ -1,4 +1,4 @@
-# Ryme & Shehab — Marrakech · 30 May 2026
+# Shay & Saibari — Marrakech · 30 May 2026
 
 Our wedding invitation site: a single self-contained HTML page, kept as a keepsake now that the big day has passed.
 

@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5" />
-<meta name="description" content="Ryme & Shehab — Join us in Marrakech, 30 May 2026." />
+<meta name="description" content="Shay & Saibari — Join us in Marrakech, 30 May 2026." />
 <meta name="theme-color" content="#F4A261" />
-<title>Ryme & Shehab · Marrakech 2026</title>
+<title>Shay & Saibari · Marrakech 2026</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%23F5C45E' d='M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'/%3E%3C/svg%3E" />
 <link rel="canonical" href="https://shehio.github.io/ryme-shehab-invite/" />
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Ryme & Shehab · Marrakech 2026" />
-<meta property="og:description" content="Ryme & Shehab — Join us in Marrakech, 30 May 2026." />
+<meta property="og:title" content="Shay & Saibari · Marrakech 2026" />
+<meta property="og:description" content="Shay & Saibari — Join us in Marrakech, 30 May 2026." />
 <meta property="og:url" content="https://shehio.github.io/ryme-shehab-invite/" />
 <meta property="og:image" content="https://shehio.github.io/ryme-shehab-invite/assets/invite-poster.png" />
 <meta name="twitter:card" content="summary_large_image" />
@@ -1123,7 +1123,7 @@ footer small {
   </div>
   <div class="hero-content">
     <p class="eyebrow" data-bind="heroEyebrow">Together with their families</p>
-    <h1 class="couple"><span class="name" data-bind="partnerA">Ryme</span><span class="amp" data-bind="coupleSeparator">&amp;</span><span class="name" data-bind="partnerB">Shehab</span></h1>
+    <h1 class="couple"><span class="name" data-bind="partnerA">Shay</span><span class="amp" data-bind="coupleSeparator">&amp;</span><span class="name" data-bind="partnerB">Saibari</span></h1>
     <p class="hero-date" data-bind="displayDate">30 · 05 · 2026</p>
     <p class="hero-loc" data-bind="heroLocation">Marrakesh · Morocco</p>
   </div>
@@ -1233,7 +1233,7 @@ footer small {
 
 <footer>
   <img src="assets/seal.png" alt="" class="footer-seal" aria-hidden="true" />
-  <div class="sig" id="footerSig">Ryme &amp; Shehab</div>
+  <div class="sig" id="footerSig">Shay &amp; Saibari</div>
   <small data-bind="footerLine">Marrakesh · 30 · 05 · 2026</small>
 </footer>
 
@@ -1247,8 +1247,8 @@ footer small {
    ══════════════════════════════════════════════════════════════════════ */
 const CONFIG = {
   /* ── Couple ─────────────────────────────────────────────────── */
-  partnerA: 'Ryme',
-  partnerB: 'Shehab',
+  partnerA: 'Shay',
+  partnerB: 'Saibari',
   /* Visual separator between the two names. Latin uses '&'; AR overrides
      to a literal space so partnerB can carry its own waw-prefix ("وشهاب"). */
   coupleSeparator: '&',
@@ -1327,7 +1327,7 @@ const CONFIG = {
 /* ══════════════════════════════════════════════════════════════════════
    TRANSLATIONS — overrides on top of CONFIG.
    Schedule entries are full arrays; everything else is a flat key map.
-   Latin proper names (Ryme, Shehab, The Levantine) stay in Latin in all
+   Latin proper names (Shay, Saibari, The Levantine) stay in Latin in all
    locales — that's standard for Moroccan multilingual invites.
    ══════════════════════════════════════════════════════════════════════ */
 const TRANSLATIONS = {
@@ -1473,7 +1473,7 @@ function bindAll() {
   const pA = getString('partnerA');
   const pB = getString('partnerB');
   const sep = getString('coupleSeparator') || '&';
-  // For symbol separators wrap with spaces ("Ryme & Shehab"); for a literal
+  // For symbol separators wrap with spaces ("Shay & Saibari"); for a literal
   // space (Arabic) just one space — partnerB carries its own waw-prefix.
   const couple = sep.trim() ? `${pA} ${sep} ${pB}` : `${pA} ${pB}`;
   const coupleHtml = sep.trim() ? `${pA} ${sep === '&' ? '&amp;' : sep} ${pB}` : `${pA} ${pB}`;
