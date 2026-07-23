@@ -136,9 +136,9 @@ function updateLocalizedVideos(language, revealCoverFrame = false) {
       arPoster: null,
     },
     {
-      element: document.querySelector('.itinerary-video'),
-      en: 'assets/itinerary_page.mp4',
-      ar: 'assets/itinerary_page_arabic.mp4',
+      element: document.querySelector('#itineraryVideo'),
+      en: 'assets/itinerary_page.mp4?v=2',
+      ar: 'assets/itinerary_page_arabic.mp4?v=2',
       enPoster: 'assets/itinerary-poster.jpg',
       arPoster: null,
     },
@@ -154,7 +154,14 @@ function updateLocalizedVideos(language, revealCoverFrame = false) {
       : (isArabic ? video.arPoster : video.enPoster);
     const shouldPlay = video.element.autoplay;
 
-    if (!isCover) video.element.muted = true;
+    if (!isCover) {
+      video.element.defaultMuted = true;
+      video.element.muted = true;
+      video.element.playsInline = true;
+      video.element.setAttribute('muted', '');
+      video.element.setAttribute('playsinline', '');
+      video.element.setAttribute('webkit-playsinline', '');
+    }
     else if (revealCoverFrame) video.element.pause();
 
     if (poster) video.element.poster = poster;
@@ -238,6 +245,36 @@ if (coverVideo) {
     if (!entry.isIntersecting && !coverVideo.paused) coverVideo.pause();
   }, { threshold: 0.15 });
   visibility.observe(coverVideo);
+}
+
+const itineraryVideo = document.querySelector('#itineraryVideo');
+if (itineraryVideo) {
+  let itineraryIsVisible = false;
+
+  function playVisibleItinerary() {
+    if (!itineraryIsVisible || document.hidden) return;
+    if (itineraryVideo.ended) itineraryVideo.currentTime = 0;
+    void itineraryVideo.play().catch(() => { /* Retry when playback becomes available. */ });
+  }
+
+  itineraryVideo.defaultMuted = true;
+  itineraryVideo.muted = true;
+  itineraryVideo.playsInline = true;
+  itineraryVideo.setAttribute('muted', '');
+  itineraryVideo.setAttribute('playsinline', '');
+  itineraryVideo.setAttribute('webkit-playsinline', '');
+
+  const visibility = new IntersectionObserver(([entry]) => {
+    itineraryIsVisible = entry.isIntersecting;
+    if (itineraryIsVisible) playVisibleItinerary();
+    else if (!itineraryVideo.paused) itineraryVideo.pause();
+  }, { threshold: 0.2 });
+
+  visibility.observe(itineraryVideo);
+  itineraryVideo.addEventListener('loadeddata', playVisibleItinerary);
+  itineraryVideo.addEventListener('canplay', playVisibleItinerary);
+  window.addEventListener('pageshow', playVisibleItinerary);
+  document.addEventListener('visibilitychange', playVisibleItinerary);
 }
 
 const countdown = document.querySelector('[data-countdown]');

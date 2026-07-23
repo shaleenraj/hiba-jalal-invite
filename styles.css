@@ -541,6 +541,7 @@ html[dir='rtl'] .rsvp-form { text-align: right; }
 html[dir='rtl'] .field input,
 html[dir='rtl'] .field select,
 html[dir='rtl'] .field textarea { text-align: right; }
+html[dir='rtl'] .field select { padding-right: 1.75rem; }
 html[dir='rtl'] .field input[type='email'],
 html[dir='rtl'] .field input[type='tel'] { direction: ltr; text-align: left; }
 html[dir='rtl'] .field input[type='email']:placeholder-shown {
