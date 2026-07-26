@@ -606,7 +606,9 @@ html[dir='rtl'] .choice-row span {
   text-transform: none;
 }
 
-html[dir='rtl'] .countdown strong { font-family: var(--arabic-body); }
+html[dir='rtl'] .countdown strong { font-family: var(--display); }
+html[dir='rtl'] .countdown { direction: ltr; }
+html[dir='rtl'] .countdown > div { direction: rtl; }
 html[dir='rtl'] .rsvp-intro > p:not(.eyebrow) { font-family: var(--arabic-body); }
 html[dir='rtl'] .rsvp-form { text-align: right; }
 html[dir='rtl'] .field input,

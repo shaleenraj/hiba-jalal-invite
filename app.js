@@ -57,8 +57,8 @@ const translations = {
     weddingValue: 'Hiba & Jalal · 15 August 2026',
   },
   ar: {
-    pageTitle: 'هبة وجلال · ١٥ أغسطس ٢٠٢٦',
-    pageDescription: 'تدعوكم هبة وجلال لمشاركتهما فرحة زفافهما في بوسكورة يوم ١٥ أغسطس ٢٠٢٦.',
+    pageTitle: 'هبة وجلال · 15 غشت 2026',
+    pageDescription: 'تدعوكم هبة وجلال لمشاركتهما فرحة زفافهما في بوسكورة يوم 15 غشت 2026.',
     languageLabel: 'اختيار اللغة',
     coverSectionLabel: 'غلاف دعوة الزفاف',
     coverVideoLabel: 'تشغيل فيديو دعوة زفاف هبة وجلال',
@@ -77,7 +77,7 @@ const translations = {
     seconds: 'ثوانٍ',
     countdownFinished: 'اليوم هو يومنا',
     weekday: 'السبت',
-    eventDate: '١٥ أغسطس ٢٠٢٦',
+    eventDate: '15 غشت 2026',
     venue: 'دار الغالية · بوسكورة',
     rsvpEyebrow: 'يرجى تأكيد الحضور',
     rsvpTitleOne: 'هل تشاركوننا',
@@ -92,12 +92,12 @@ const translations = {
     accepts: 'بكل سرور',
     declines: 'نعتذر عن الحضور',
     guestCount: 'عدد الضيوف',
-    guestOne: 'ضيف واحد',
-    guestTwo: 'ضيفان',
-    guestThree: '٣ ضيوف',
-    guestFour: '٤ ضيوف',
-    guestFive: '٥ ضيوف',
-    guestSix: '٦ ضيوف',
+    guestOne: '1',
+    guestTwo: '2',
+    guestThree: '3',
+    guestFour: '4',
+    guestFive: '5',
+    guestSix: '6',
     note: 'رسالة للعروسين',
     notePlaceholder: 'شاركوا هبة وجلال أمنياتكم الجميلة',
     sendResponse: 'إرسال الرد',
@@ -106,7 +106,7 @@ const translations = {
     thankYou: 'شكرًا لكم',
     successMessage: 'تم استلام ردكم. يسعدنا أن نحتفل معكم قريبًا.',
     returnInvitation: 'العودة إلى الدعوة',
-    weddingValue: 'هبة وجلال · ١٥ أغسطس ٢٠٢٦',
+    weddingValue: 'هبة وجلال · 15 غشت 2026',
   },
 };
 
@@ -125,14 +125,14 @@ function updateLocalizedVideos(language, revealCoverFrame = false) {
     {
       element: document.querySelector('#coverVideo'),
       en: 'assets/cover_page_english_new.mp4',
-      ar: 'assets/cover_arabic_new_1.mp4',
+      ar: 'assets/cover_arabic_new_2.mp4',
       enPoster: 'assets/cover-poster.jpg',
       arPoster: null,
     },
     {
       element: document.querySelector('#itineraryVideo'),
-      en: 'assets/itinerary_page.mp4?v=2',
-      ar: 'assets/itinerary_page_arabic.mp4?v=2',
+      en: 'assets/itenerary_english_new.mp4?v=1',
+      ar: 'assets/itenerary_arabic_new.mp4?v=1',
       enPoster: 'assets/itinerary-poster.jpg',
       arPoster: null,
     },
@@ -301,7 +301,7 @@ if (countdown) {
       seconds: totalSeconds % 60,
     };
     Object.entries(values).forEach(([key, value]) => {
-      fields[key].textContent = new Intl.NumberFormat(currentLanguage === 'ar' ? 'ar-EG' : 'en-US', {
+      fields[key].textContent = new Intl.NumberFormat(currentLanguage === 'ar' ? 'ar-EG-u-nu-latn' : 'en-US', {
         minimumIntegerDigits: 2,
         useGrouping: false,
       }).format(value);
