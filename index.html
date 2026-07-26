@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Hiba &amp; Jalal invite you to celebrate their wedding in Casablanca on 15 August 2026." />
+  <meta name="description" content="Hiba &amp; Jalal invite you to celebrate their wedding in Bouskoura on 15 August 2026." />
   <meta name="theme-color" content="#f5f1e8" />
   <title>Hiba &amp; Jalal · 15 August 2026</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Allura&amp;family=Italiana&amp;family=Manrope:wght@300;400;500;600&amp;family=Noto+Naskh+Arabic:wght@400;500;600&amp;display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=21" />
+  <link href="https://fonts.googleapis.com/css2?family=Allura&amp;family=Italiana&amp;family=Manrope:wght@300;400;500;600&amp;display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=27" />
 </head>
 <body>
   <div class="language-switcher" role="group" aria-label="Choose language" data-i18n-aria="languageLabel">
@@ -29,7 +29,7 @@
         aria-label="Play Hiba and Jalal's wedding invitation video"
         data-i18n-aria="coverVideoLabel"
       >
-        <source src="assets/cover_page_english.mp4" type="video/mp4" />
+        <source src="assets/cover_page_english_new.mp4" type="video/mp4" />
       </video>
       <a class="scroll-prompt" id="coverInstructions" href="#countdown">
         <span data-i18n="keepScrolling">Keep scrolling to continue</span>
@@ -52,7 +52,7 @@
         <div class="date-lockup">
           <span data-i18n="weekday">Saturday</span>
           <strong data-i18n="eventDate">15 August 2026</strong>
-          <a class="venue-map" href="https://www.google.com/maps/search/?api=1&amp;query=Dar+El+Ghalia+Casablanca+Morocco" target="_blank" rel="noopener noreferrer"><span data-i18n="venue">Dar El Ghalia · Casablanca</span></a>
+          <a class="venue-map" href="https://www.google.com/maps/search/?api=1&amp;query=Dar+El+Ghalia+Bouskoura+Morocco" target="_blank" rel="noopener noreferrer"><span data-i18n="venue">Dar El Ghalia · Bouskoura</span></a>
         </div>
       </div>
     </section>
@@ -61,6 +61,33 @@
       <video id="itineraryVideo" class="itinerary-video" autoplay muted loop playsinline webkit-playsinline preload="auto" poster="assets/itinerary-poster.jpg" aria-label="Hiba and Jalal's wedding itinerary" data-i18n-aria="itineraryVideoLabel">
         <source src="assets/itinerary_page.mp4?v=2" type="video/mp4" />
       </video>
+    </section>
+
+    <section class="after-party-stage" id="after-party" aria-labelledby="after-party-title">
+      <div class="after-party-layout">
+        <div class="after-party-copy">
+          <p class="eyebrow" data-i18n="afterPartyEyebrow">After-wedding party with DJ</p>
+          <h1 id="after-party-title" data-i18n="afterPartyTitle">Stay with us</h1>
+        </div>
+        <figure class="after-party-figure">
+          <img
+            class="after-party-image"
+            src="assets/percussion_dj.jpg"
+            alt="Live percussion and DJ for the after-wedding party"
+            data-i18n-alt="afterPartyImageAlt"
+            loading="lazy"
+            decoding="async"
+          />
+          <img
+            class="after-party-leaf-frame"
+            src="assets/after-party-leaf-accents.png"
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+      </div>
     </section>
 
     <section class="rsvp-stage" id="rsvp">
@@ -72,7 +99,7 @@
           <div class="rsvp-event">
             <span data-i18n="eventDate">15 August 2026</span>
             <strong data-i18n="coupleNames">Hiba &amp; Jalal</strong>
-            <span data-i18n="cityCountry">Casablanca, Morocco</span>
+            <span data-i18n="cityCountry">Dar El Ghalia · Bouskoura</span>
           </div>
         </div>
 
@@ -86,16 +113,6 @@
               <input id="name" name="name" type="text" autocomplete="name" required placeholder="Your full name" data-i18n-placeholder="fullNamePlaceholder" />
             </div>
 
-            <div class="field">
-              <label for="email" data-i18n="email">Email</label>
-              <input id="email" name="email" type="email" autocomplete="email" required placeholder="you@example.com" data-i18n-placeholder="emailPlaceholder" />
-            </div>
-
-            <div class="field">
-              <label for="phone"><span data-i18n="phone">Phone</span> <span data-i18n="optional">(optional)</span></label>
-              <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="Your phone number" data-i18n-placeholder="phonePlaceholder" />
-            </div>
-
             <fieldset class="field field--wide attendance-field">
               <legend data-i18n="attendanceQuestion">Will you be attending?</legend>
               <div class="choice-row">
@@ -104,7 +121,7 @@
               </div>
             </fieldset>
 
-            <div class="field" data-guest-field>
+            <div class="field field--wide" data-guest-field>
               <label for="guests" data-i18n="guestCount">Number of guests</label>
               <select id="guests" name="guests">
                 <option value="1" data-i18n="guestOne">1 guest</option>
@@ -114,11 +131,6 @@
                 <option value="5" data-i18n="guestFive">5 guests</option>
                 <option value="6" data-i18n="guestSix">6 guests</option>
               </select>
-            </div>
-
-            <div class="field">
-              <label for="dietary"><span data-i18n="dietary">Dietary needs</span> <span data-i18n="optional">(optional)</span></label>
-              <input id="dietary" name="dietary" type="text" placeholder="Allergies or preferences" data-i18n-placeholder="dietaryPlaceholder" />
             </div>
 
             <div class="field field--wide">
@@ -140,6 +152,6 @@
     </section>
   </main>
 
-  <script src="app.js?v=17" defer></script>
+  <script src="app.js?v=24" defer></script>
 </body>
 </html>
