@@ -1,7 +1,7 @@
 'use strict';
 
 const RSVP_LOG_KEY = 'hiba-jalal-rsvp-log';
-const LANGUAGE_KEY = 'hiba-jalal-language';
+const LANGUAGE_KEY = 'hiba-jalal-language-v2';
 
 const translations = {
   en: {
@@ -117,7 +117,7 @@ const translations = {
 const requestedLanguage = new URLSearchParams(window.location.search).get('lang');
 let currentLanguage = ['en', 'ar'].includes(requestedLanguage)
   ? requestedLanguage
-  : localStorage.getItem(LANGUAGE_KEY) || 'en';
+  : localStorage.getItem(LANGUAGE_KEY) || 'ar';
 let renderCountdown = () => {};
 let localizeGuestNameFields = () => {};
 
@@ -139,7 +139,7 @@ function updateLocalizedVideos(language, revealCoverFrame = false) {
       en: 'assets/itenerary_english_new.mp4?v=1',
       ar: 'assets/itenerary_arabic_new.mp4?v=3',
       enPoster: 'assets/itinerary-poster.jpg',
-      arPoster: null,
+      arPoster: 'assets/itinerary-poster-ar.jpg?v=1',
     },
   ];
 
@@ -212,7 +212,7 @@ function applyLanguage(language, updateUrl = true, revealCoverFrame = false) {
   try { localStorage.setItem(LANGUAGE_KEY, currentLanguage); } catch (_) { /* Storage can be unavailable. */ }
   if (updateUrl) {
     const url = new URL(window.location.href);
-    if (currentLanguage === 'ar') url.searchParams.set('lang', 'ar');
+    if (currentLanguage === 'en') url.searchParams.set('lang', 'en');
     else url.searchParams.delete('lang');
     window.history.replaceState({}, '', url);
   }
