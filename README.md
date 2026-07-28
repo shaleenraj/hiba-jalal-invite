@@ -1,4 +1,4 @@
-# Hiba & Jalal — Bouskoura · 15 August 2026
+# Hiba & Jalal Eddine — Bouskoura · 15 August 2026
 
 An elegant, video-led wedding invitation built as a single scrolling experience.
 
