@@ -137,7 +137,7 @@ function updateLocalizedVideos(language, revealCoverFrame = false) {
     {
       element: document.querySelector('#itineraryVideo'),
       en: 'assets/itenerary_english_new.mp4?v=1',
-      ar: 'assets/itenerary_arabic_new.mp4?v=1',
+      ar: 'assets/itenerary_arabic_new.mp4?v=3',
       enPoster: 'assets/itinerary-poster.jpg',
       arPoster: null,
     },
