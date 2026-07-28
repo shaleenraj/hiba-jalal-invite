@@ -525,6 +525,7 @@ video { display: block; max-width: 100%; }
 }
 
 .field textarea { resize: vertical; }
+.guest-names-fields { display: grid; gap: 1.25rem; }
 .field input:focus,
 .field select:focus,
 .field textarea:focus { border-color: var(--green); }

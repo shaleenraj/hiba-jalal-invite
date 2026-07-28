@@ -46,6 +46,8 @@ const translations = {
     guestFour: '4 guests',
     guestFive: '5 guests',
     guestSix: '6 guests',
+    guestName: 'Guest name',
+    guestNamePlaceholder: 'Full name',
     note: 'A note for the couple',
     notePlaceholder: 'Share your wishes with Hiba & Jalal',
     sendResponse: 'Send response',
@@ -98,6 +100,8 @@ const translations = {
     guestFour: '4',
     guestFive: '5',
     guestSix: '6',
+    guestName: 'اسم الضيف',
+    guestNamePlaceholder: 'الاسم الكامل',
     note: 'رسالة للعروسين',
     notePlaceholder: 'شاركوا هبة وجلال أمنياتكم الجميلة',
     sendResponse: 'إرسال الرد',
@@ -115,6 +119,7 @@ let currentLanguage = ['en', 'ar'].includes(requestedLanguage)
   ? requestedLanguage
   : localStorage.getItem(LANGUAGE_KEY) || 'en';
 let renderCountdown = () => {};
+let localizeGuestNameFields = () => {};
 
 function text(key) {
   return translations[currentLanguage][key] || translations.en[key] || key;
@@ -124,10 +129,10 @@ function updateLocalizedVideos(language, revealCoverFrame = false) {
   const videos = [
     {
       element: document.querySelector('#coverVideo'),
-      en: 'assets/cover_page_english_new.mp4',
-      ar: 'assets/cover_arabic_new_2.mp4',
-      enPoster: 'assets/cover-poster.jpg',
-      arPoster: null,
+      en: 'assets/cover_english_new_3.mp4',
+      ar: 'assets/cover_arabic_new_3.mp4',
+      enPoster: 'assets/cover-poster.jpg?v=3',
+      arPoster: 'assets/cover-poster-ar.jpg?v=1',
     },
     {
       element: document.querySelector('#itineraryVideo'),
@@ -143,9 +148,7 @@ function updateLocalizedVideos(language, revealCoverFrame = false) {
     const isCover = video.element.matches('#coverVideo');
     const isArabic = language === 'ar';
     const source = isArabic ? video.ar : video.en;
-    const poster = isCover && revealCoverFrame
-      ? null
-      : (isArabic ? video.arPoster : video.enPoster);
+    const poster = isArabic ? video.arPoster : video.enPoster;
     const shouldPlay = video.element.autoplay;
 
     if (!isCover) {
@@ -165,8 +168,8 @@ function updateLocalizedVideos(language, revealCoverFrame = false) {
     if (video.element.currentSrc !== absoluteSource) {
       video.element.src = source;
       video.element.load();
-
     }
+    else if (isCover && revealCoverFrame) video.element.load();
 
     if (!poster && !shouldPlay) {
       const revealFirstFrame = () => {
@@ -204,6 +207,7 @@ function applyLanguage(language, updateUrl = true, revealCoverFrame = false) {
   document.querySelectorAll('[data-language]').forEach((button) => {
     button.setAttribute('aria-pressed', String(button.dataset.language === currentLanguage));
   });
+  localizeGuestNameFields();
 
   try { localStorage.setItem(LANGUAGE_KEY, currentLanguage); } catch (_) { /* Storage can be unavailable. */ }
   if (updateUrl) {
@@ -322,18 +326,61 @@ if (rsvpForm) {
   const submitLabel = submit.querySelector('span');
   const error = rsvpForm.querySelector('[data-form-error]');
   const success = document.querySelector('[data-rsvp-success]');
-  const guestField = rsvpForm.querySelector('[data-guest-field]');
+  const guestFields = rsvpForm.querySelectorAll('[data-guest-field]');
   const guests = rsvpForm.querySelector('#guests');
+  const guestNamesFields = rsvpForm.querySelector('#guestNamesFields');
+  const guestNameValues = new Map();
+
+  function renderGuestNameFields() {
+    guestNamesFields.querySelectorAll('input').forEach((input) => {
+      guestNameValues.set(input.name, input.value);
+    });
+    guestNamesFields.replaceChildren();
+
+    const guestCount = Number.parseInt(guests.value, 10) || 1;
+    for (let guestNumber = 1; guestNumber <= guestCount; guestNumber += 1) {
+      const field = document.createElement('div');
+      const label = document.createElement('label');
+      const input = document.createElement('input');
+      const inputName = `guest_${guestNumber}_name`;
+
+      label.htmlFor = inputName;
+      label.dataset.guestNumber = String(guestNumber);
+      input.id = inputName;
+      input.name = inputName;
+      input.type = 'text';
+      input.autocomplete = 'name';
+      input.required = true;
+      input.value = guestNameValues.get(inputName) || '';
+      input.addEventListener('input', () => guestNameValues.set(inputName, input.value));
+
+      field.append(label, input);
+      guestNamesFields.append(field);
+    }
+    localizeGuestNameFields();
+  }
+
+  localizeGuestNameFields = () => {
+    guestNamesFields.querySelectorAll('label').forEach((label) => {
+      label.textContent = `${text('guestName')} ${label.dataset.guestNumber}`;
+    });
+    guestNamesFields.querySelectorAll('input').forEach((input) => {
+      input.placeholder = text('guestNamePlaceholder');
+    });
+  };
 
   rsvpForm.querySelectorAll('input[name="attending"]').forEach((input) => {
     input.addEventListener('change', () => {
       const attending = rsvpForm.querySelector('input[name="attending"]:checked')?.value;
       const declined = attending === 'no';
-      guestField.hidden = declined;
-      guests.disabled = declined;
-      if (declined) guests.value = '1';
+      guestFields.forEach((field) => { field.hidden = declined; });
+      rsvpForm.querySelectorAll('[data-guest-field] select, [data-guest-field] input').forEach((field) => {
+        field.disabled = declined;
+      });
     });
   });
+  guests.addEventListener('change', renderGuestNameFields);
+  renderGuestNameFields();
 
   function rememberSubmission(data) {
     try {

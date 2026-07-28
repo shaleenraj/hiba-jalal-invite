@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Allura&amp;family=Italiana&amp;family=Manrope:wght@300;400;500;600&amp;display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=29" />
+  <link rel="stylesheet" href="styles.css?v=30" />
 </head>
 <body>
   <div class="language-switcher" role="group" aria-label="Choose language" data-i18n-aria="languageLabel">
@@ -24,12 +24,12 @@
         class="cover-video"
         playsinline
         preload="auto"
-        poster="assets/cover-poster.jpg"
+        poster="assets/cover-poster.jpg?v=3"
         tabindex="0"
         aria-label="Play Hiba and Jalal's wedding invitation video"
         data-i18n-aria="coverVideoLabel"
       >
-        <source src="assets/cover_page_english_new.mp4" type="video/mp4" />
+        <source src="assets/cover_english_new_3.mp4" type="video/mp4" />
       </video>
       <a class="scroll-prompt" id="coverInstructions" href="#countdown">
         <span data-i18n="keepScrolling">Keep scrolling to continue</span>
@@ -133,6 +133,10 @@
               </select>
             </div>
 
+            <div class="field field--wide" data-guest-field>
+              <div class="guest-names-fields" id="guestNamesFields" aria-live="polite"></div>
+            </div>
+
             <div class="field field--wide">
               <label for="message"><span data-i18n="note">A note for the couple</span> <span data-i18n="optional">(optional)</span></label>
               <textarea id="message" name="message" rows="3" placeholder="Share your wishes with Hiba &amp; Jalal" data-i18n-placeholder="notePlaceholder"></textarea>
@@ -152,6 +156,6 @@
     </section>
   </main>
 
-  <script src="app.js?v=29" defer></script>
+  <script src="app.js?v=34" defer></script>
 </body>
 </html>
