@@ -39,15 +39,6 @@ const translations = {
     attendanceQuestion: 'Will you be attending?',
     accepts: 'Joyfully accepts',
     declines: 'Regretfully declines',
-    guestCount: 'Number of guests',
-    guestOne: '1 guest',
-    guestTwo: '2 guests',
-    guestThree: '3 guests',
-    guestFour: '4 guests',
-    guestFive: '5 guests',
-    guestSix: '6 guests',
-    guestName: 'Guest name',
-    guestNamePlaceholder: 'Full name',
     note: 'A note for the couple',
     notePlaceholder: 'Share your wishes with Hiba & Jalal Eddine',
     sendResponse: 'Send response',
@@ -93,15 +84,6 @@ const translations = {
     attendanceQuestion: 'هل ستحضرون؟',
     accepts: 'بكل سرور',
     declines: 'نعتذر عن الحضور',
-    guestCount: 'عدد الضيوف',
-    guestOne: '1',
-    guestTwo: '2',
-    guestThree: '3',
-    guestFour: '4',
-    guestFive: '5',
-    guestSix: '6',
-    guestName: 'اسم الضيف',
-    guestNamePlaceholder: 'الاسم الكامل',
     note: 'رسالة للعروسين',
     notePlaceholder: 'شاركوا هبة وجلال الدين أمنياتكم الجميلة',
     sendResponse: 'إرسال الرد',
@@ -119,7 +101,6 @@ let currentLanguage = ['en', 'ar'].includes(requestedLanguage)
   ? requestedLanguage
   : localStorage.getItem(LANGUAGE_KEY) || 'ar';
 let renderCountdown = () => {};
-let localizeGuestNameFields = () => {};
 
 function text(key) {
   return translations[currentLanguage][key] || translations.en[key] || key;
@@ -207,7 +188,6 @@ function applyLanguage(language, updateUrl = true, revealCoverFrame = false) {
   document.querySelectorAll('[data-language]').forEach((button) => {
     button.setAttribute('aria-pressed', String(button.dataset.language === currentLanguage));
   });
-  localizeGuestNameFields();
 
   try { localStorage.setItem(LANGUAGE_KEY, currentLanguage); } catch (_) { /* Storage can be unavailable. */ }
   if (updateUrl) {
@@ -326,61 +306,6 @@ if (rsvpForm) {
   const submitLabel = submit.querySelector('span');
   const error = rsvpForm.querySelector('[data-form-error]');
   const success = document.querySelector('[data-rsvp-success]');
-  const guestFields = rsvpForm.querySelectorAll('[data-guest-field]');
-  const guests = rsvpForm.querySelector('#guests');
-  const guestNamesFields = rsvpForm.querySelector('#guestNamesFields');
-  const guestNameValues = new Map();
-
-  function renderGuestNameFields() {
-    guestNamesFields.querySelectorAll('input').forEach((input) => {
-      guestNameValues.set(input.name, input.value);
-    });
-    guestNamesFields.replaceChildren();
-
-    const guestCount = Number.parseInt(guests.value, 10) || 1;
-    for (let guestNumber = 1; guestNumber <= guestCount; guestNumber += 1) {
-      const field = document.createElement('div');
-      const label = document.createElement('label');
-      const input = document.createElement('input');
-      const inputName = `guest_${guestNumber}_name`;
-
-      label.htmlFor = inputName;
-      label.dataset.guestNumber = String(guestNumber);
-      input.id = inputName;
-      input.name = inputName;
-      input.type = 'text';
-      input.autocomplete = 'name';
-      input.required = true;
-      input.value = guestNameValues.get(inputName) || '';
-      input.addEventListener('input', () => guestNameValues.set(inputName, input.value));
-
-      field.append(label, input);
-      guestNamesFields.append(field);
-    }
-    localizeGuestNameFields();
-  }
-
-  localizeGuestNameFields = () => {
-    guestNamesFields.querySelectorAll('label').forEach((label) => {
-      label.textContent = `${text('guestName')} ${label.dataset.guestNumber}`;
-    });
-    guestNamesFields.querySelectorAll('input').forEach((input) => {
-      input.placeholder = text('guestNamePlaceholder');
-    });
-  };
-
-  rsvpForm.querySelectorAll('input[name="attending"]').forEach((input) => {
-    input.addEventListener('change', () => {
-      const attending = rsvpForm.querySelector('input[name="attending"]:checked')?.value;
-      const declined = attending === 'no';
-      guestFields.forEach((field) => { field.hidden = declined; });
-      rsvpForm.querySelectorAll('[data-guest-field] select, [data-guest-field] input').forEach((field) => {
-        field.disabled = declined;
-      });
-    });
-  });
-  guests.addEventListener('change', renderGuestNameFields);
-  renderGuestNameFields();
 
   function rememberSubmission(data) {
     try {
@@ -402,7 +327,6 @@ if (rsvpForm) {
     submit.disabled = true;
     submitLabel.textContent = text('sending');
     const payload = Object.fromEntries(new FormData(rsvpForm).entries());
-    if (payload.attending === 'no') payload.guests = '0';
     const controller = new AbortController();
     const timeout = window.setTimeout(() => controller.abort(), 15000);
 
