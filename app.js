@@ -26,6 +26,7 @@ const translations = {
     countdownFinished: 'Today is the day.',
     weekday: 'Saturday',
     eventDate: '15 August 2026',
+    eventStart: 'From 16:00',
     venue: 'Dar El Ghalia · Bouskoura',
     rsvpEyebrow: 'Kindly respond',
     rsvpTitleOne: 'Will you',
@@ -71,6 +72,7 @@ const translations = {
     countdownFinished: 'اليوم هو يومنا',
     weekday: 'السبت',
     eventDate: '15 غشت 2026',
+    eventStart: 'إبتداءاً من 16:00',
     venue: 'دار الغالية · بوسكورة',
     rsvpEyebrow: 'يرجى تأكيد الحضور',
     rsvpTitleOne: 'هل تشاركوننا',
@@ -110,17 +112,17 @@ function updateLocalizedVideos(language, revealCoverFrame = false) {
   const videos = [
     {
       element: document.querySelector('#coverVideo'),
-      en: 'assets/cover_english_new_3.mp4',
-      ar: 'assets/cover_arabic_new_3.mp4',
-      enPoster: 'assets/cover-poster.jpg?v=3',
-      arPoster: 'assets/cover-poster-ar.jpg?v=1',
+      en: 'assets/cover_english_4.mp4?v=4',
+      ar: 'assets/cover_arabic_4.mp4?v=4',
+      enPoster: 'assets/cover-poster.jpg?v=4',
+      arPoster: 'assets/cover-poster-ar.jpg?v=4',
     },
     {
       element: document.querySelector('#itineraryVideo'),
-      en: 'assets/itenerary_english_new.mp4?v=1',
-      ar: 'assets/itenerary_arabic_new.mp4?v=3',
-      enPoster: 'assets/itinerary-poster.jpg',
-      arPoster: 'assets/itinerary-poster-ar.jpg?v=1',
+      en: 'assets/itenerary_english_5.mp4?v=5',
+      ar: 'assets/itenerary_arabic_5.mp4?v=5',
+      enPoster: 'assets/itinerary-poster.jpg?v=5',
+      arPoster: 'assets/itinerary-poster-ar.jpg?v=5',
     },
   ];
 
